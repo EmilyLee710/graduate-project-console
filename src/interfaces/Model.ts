@@ -349,11 +349,10 @@ export interface ConfigInfo{
  export interface UserInfo{
     id:number,
     ctime:number,
-    name:string,
-    passwd:string,
+    username:string,
     phone:string,
-    sex:string,
-    address:string
+    sex:number,
+    address:string,
  }
 
  export interface RestauInfo{
@@ -362,7 +361,9 @@ export interface ConfigInfo{
    name:string,
    passwd:string,
    phone:string,
-   address:string
+   address:string,
+   license:string,
+   cover_url:string
  }
 
  export interface OrderCuisineInfo{

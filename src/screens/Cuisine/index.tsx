@@ -56,7 +56,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     var resetButton = (<Button className="btn-left" onClick={this.reset.bind(this)} >显示全部</Button>)
 
     return (
-      <Layout className='commodity-style'>
+      <Layout className='cuisine-style'>
         <Header >
           <div className='header'>
             <div>

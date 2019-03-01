@@ -184,7 +184,7 @@ export default class extends React.Component<RouteComponentProps<any>> {
       }, () => {
         // console.log(this.state.menu)
         // console.log(this.state.title)
-        console.log(this.state.identity)
+        // console.log(this.state.identity)
       })
     })
   }

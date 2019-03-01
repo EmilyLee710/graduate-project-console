@@ -14544,32 +14544,32 @@ textarea.ant-input-number {
   display: inline-block;
   font-size: 14px;
 }
-.commodity-style .header {
+.cuisine-style .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 100%;
 }
-.commodity-style .btn-left {
+.cuisine-style .btn-left {
   margin-left: 10px;
 }
-.commodity-style .searchArea {
+.cuisine-style .searchArea {
   display: flex;
 }
-.commodity-style .input {
+.cuisine-style .input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.commodity-style .input-btn {
+.cuisine-style .input-btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.commodity-style .header {
+.cuisine-style .header {
   width: 100%;
   height: auto;
   margin-top: auto;
 }
-.commodity-style .ant-layout-header {
+.cuisine-style .ant-layout-header {
   background: #001529;
   padding: 0 16px;
   height: 64px;
@@ -14705,4 +14705,4 @@ textarea.ant-input-number {
   flex-flow: row wrap;
 }
 
-/*# sourceMappingURL=index.css.map?v=d427c3*/
+/*# sourceMappingURL=index.css.map?v=9ae4f0*/

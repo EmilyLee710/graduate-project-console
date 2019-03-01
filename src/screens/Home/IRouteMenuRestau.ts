@@ -1,5 +1,5 @@
-import CommodityComponent from '../Commodity'
-import EditCommodityComponent from '../Commodity/EditCommodity'
+import CuisineComponent from '../Cuisine'
+import EditCuisineComponent from '../Cuisine/EditCuisine'
 
 import OrderComponent from '../Order'
 // import EditSessionComponent from '../Session/EditSession'
@@ -18,20 +18,20 @@ interface RouteMenuList {
 }
 
 const routeMenu: RouteMenuList[] = [{
-  key: 'commodity',
+  key: 'cuisine',
   title:'菜品设置',
-  icon:'shopping-cart',
+  icon:'star',
   status:true,
-  component:CommodityComponent,
+  component:CuisineComponent,
   children:[],
   listRoute:[{
     key:'set',
-    component:EditCommodityComponent
+    component:EditCuisineComponent
   }]
 }, {
   key: 'order',
   title:'订单管理',
-  icon:'shop',
+  icon:'shopping-cart',
   status:true,
   component:OrderComponent,
   children:[],
@@ -39,7 +39,7 @@ const routeMenu: RouteMenuList[] = [{
 }, {
   key: 'operation',
   title:'餐厅设置',
-  icon:'user',
+  icon:'setting',
   status:true,
   component:RestauSettingComponent,
   children:[],

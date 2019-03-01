@@ -221,6 +221,28 @@ export interface AdminSetSkuRequest {
  * 管理员登陆
  */
 export interface AdminLoginRequest{
-  name:string
-  pwd:string
+  phone:string
+  passwd:string
+}
+
+/**
+ * 管理员获取用户列表
+ */
+export interface AdminGetAllUserRequest{
+   UserId:string
+}
+
+/**
+ * 管理员查看用户信息
+ */
+export interface AdminGetUserInfoRequest{
+  
+}
+
+/**
+ * 餐厅登录
+ */
+export interface RestaurantLoginRequest{
+  phone:string
+  passwd:string
 }

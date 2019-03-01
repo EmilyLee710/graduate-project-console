@@ -51,6 +51,11 @@ export default class UserManagement extends React.Component<RouteComponentProps<
                         value = {this.state.restauPhone}/>
                     </div>
                     <div className='flex padding-top'>
+                        <label className='width-title'>营业执照编码：</label>
+                        <Input style={{ width: 200 }} 
+                        value = {this.state.restauPhone}/>
+                    </div>
+                    <div className='flex padding-top'>
                         <label className='width-title'>地址：</label>
                         <Input style={{ width: 200 }} 
                         value = {this.state.restauAddress}/>

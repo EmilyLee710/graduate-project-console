@@ -6,6 +6,9 @@ import { ColumnProps } from 'antd/lib/table'
 
 import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 
+
+import * as UserService from '../../services/UserManageApi'
+import CheckService from '../../services/Checked'
 import './style.less'
 
 import store from '../../Store'
@@ -90,15 +93,13 @@ export default class UserManagement extends React.Component<RouteComponentProps<
     }, {
         title: '用户昵称',
         align: 'center',
-        dataIndex: 'name'
-    }, {
-        title: '用户密码',
-        align: 'center',
-        dataIndex: 'passwd'
-    }, {
+        dataIndex: 'username'
+    },{
         title: '性别',
         align: 'center',
-        dataIndex: 'sex'
+        render:(text,record) => (
+            <p>{CheckService.checkSex(record.sex)}</p>
+        )
     }, {
         title: '电话',
         align: 'center',
@@ -107,13 +108,19 @@ export default class UserManagement extends React.Component<RouteComponentProps<
         title: '地址',
         align: 'center',
         dataIndex: 'address'
+    },{
+        title: '时间',
+        align: 'center',
+        render:(text,record) => (
+            <Col>{CheckService.formatTime(record.ctime)}</Col>
+        )
     }, {
         title: '操作',
-        key: 'id',
+        key: 'operation',
         align: 'center',
         render: (text, record) => (
             <Row type="flex" gutter={16} justify="center">
-                <Col><a onClick={()=>this.view(record.id)}>查看</a></Col>
+                {/* <Col><a onClick={()=>this.view(record.id)}>查看</a></Col> */}
                 <Col><a onClick={()=>this.delres()}>删除</a></Col>
             </Row>
         )
@@ -138,14 +145,45 @@ export default class UserManagement extends React.Component<RouteComponentProps<
         })
     }
 
-    componentWillMount(){
-        let alluser = userList.map((item,i) =>{
-            return item
-        })
+    async getUserlist(){
+        let adminId = localStorage.getItem('adminId')
+        try {
+            const result = await UserService.AdminGetAllUser({
+              // token:token,
+              UserId:adminId
+            })
+            if(result.stat === '1'){
+                this.setState({
+                    userList: result.user
+                  })
+                console.log(result.user)
+            } else if(result.stat === '0'){
+                Modal.error({
+                    title: '提示',
+                    content: '没有该管理员'
+                })
+            } else {
+                throw result.stat
+            }
+            
+          } catch (error) {
+            Modal.error({
+              title: '提示',
+              content: error
+            })
+          }
 
-        this.setState({
-            userList:alluser
-        })
+    }
+
+    componentWillMount(){
+        // let alluser = userList.map((item,i) =>{
+        //     return item
+        // })
+
+        // this.setState({
+        //     userList:alluser
+        // })
+        this.getUserlist()
     }
 
     componentDidMount() {

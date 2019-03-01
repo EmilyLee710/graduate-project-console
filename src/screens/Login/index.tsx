@@ -8,7 +8,7 @@ import checked from '../../services/Checked'
 const Option = Select.Option
 
 interface State {
-  name: string
+  phone: string
   pwd: string
   identity:string,
   checked: boolean
@@ -16,7 +16,7 @@ interface State {
 export default class extends React.Component<RouteComponentProps<any>> {
   form: any = null
   state: State = {
-    name: '',
+    phone: '',
     pwd: '',
     identity:'',
     checked: false
@@ -38,10 +38,10 @@ export default class extends React.Component<RouteComponentProps<any>> {
           <Input
             prefix={<Icon type="user" />}
             placeholder="请输入账号"
-            value={this.state.name}
+            value={this.state.phone}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               this.setState({
-                name: event.target.value.trim()
+                phone: event.target.value.trim()
               })
             }}
           />
@@ -68,7 +68,7 @@ export default class extends React.Component<RouteComponentProps<any>> {
         </Form.Item>
         <Form.Item>
           <Checkbox checked={this.state.checked} onChange={this.onChange}>记住密码</Checkbox>
-          <Button type="primary" htmlType="submit" className="login-form-button" onClick={() => this.login()}>登录</Button>
+          <Button type="primary" htmlType="submit" className="login-form-button" onClick={() => this.Login()}>登录</Button>
         </Form.Item>
       </Form>
     </div>
@@ -84,15 +84,25 @@ export default class extends React.Component<RouteComponentProps<any>> {
   get disabled(): boolean {
     return (
       this.loading === true ||
-      this.state.name === '' ||
+      this.state.phone === '' ||
       this.state.pwd === ''
     )
   }
 
-  async login() {
+  Login(){
+    if(this.state.identity === 'admin'){
+      this.adminLogin()
+    } else if(this.state.identity === 'restaurant'){
+      this.restauLogin()
+    } else{
+      message.error('请选择身份')
+    }
+  }
+
+  async restauLogin(){
     try {
-      if (this.state.checked && document.cookie.indexOf('name') === -1) {
-        this.setCookie(this.state.name, this.state.pwd, 365)
+      if (this.state.checked && document.cookie.indexOf('res_phone') === -1) {
+        this.setCookie(this.state.phone, this.state.pwd, 365)
       } else if (!this.state.checked) {
         this.setCookie('', '', -1)
       }
@@ -100,10 +110,10 @@ export default class extends React.Component<RouteComponentProps<any>> {
         return
       }
       this.loading = true
-      if (this.state.name === '') {
+      if (this.state.phone === '') {
         Modal.error({
           title: '提示',
-          content: '请输入账号'
+          content: '请输入手机号'
         })
       } else if (this.state.pwd === '') {
         Modal.error({
@@ -111,33 +121,15 @@ export default class extends React.Component<RouteComponentProps<any>> {
           content: '请输入密码'
         })
       } else {
-        // let result = await authService.login(this.state.name, this.state.pwd)
-        // if (result.stat === 'ok') {
-        //   localStorage.setItem('token', result.token)
-        //   // console.log(localStorage.getItem('token'))
-        //   this.props.history.push('/home')
-        //   message.success('登录成功')
-        // } else {
-        //   throw result.stat
-        // }
-        if (this.state.name === 'admin' && this.state.pwd === '123qwe') {
-          if(this.state.identity === 'admin'){
-            localStorage.setItem('identity', '1')
-          } else if(this.state.identity === 'restaurant'){
-            localStorage.setItem('identity', '2')
-          }
-          // console.log(this.state.identity)
-          
+        let result = await authService.restauLogin(this.state.phone, this.state.pwd)
+        message.info(result.stat)
+        if (result.stat === '1') {
+          localStorage.setItem('restauId', result.RestaurantID)
+          // console.log(localStorage.getItem('token'))
           this.props.history.push('/home')
           message.success('登录成功')
-        } 
-        // else if (this.state.name === 'restaurant' && this.state.pwd === '888888') {
-        //   localStorage.setItem('identity', '2')
-        //   this.props.history.push('/home')
-        //   message.success('登录成功')
-        // } 
-        else {
-          message.error('登录失败')
+        } else {
+          throw result.stat
         }
       }
 
@@ -150,7 +142,76 @@ export default class extends React.Component<RouteComponentProps<any>> {
       } else {
         Modal.error({
           title: '提示',
-          content: '网络错误'
+          content: JSON.stringify(error)
+        })
+      }
+    }
+    this.loading = false
+  }
+
+  async adminLogin() {
+    try {
+      if (this.state.checked && document.cookie.indexOf('admin_phone') === -1) {
+        this.setCookie(this.state.phone, this.state.pwd, 365)
+      } else if (!this.state.checked) {
+        this.setCookie('', '', -1)
+      }
+      if (this.loading === true) {
+        return
+      }
+      this.loading = true
+      if (this.state.phone === '') {
+        Modal.error({
+          title: '提示',
+          content: '请输入账号'
+        })
+      } else if (this.state.pwd === '') {
+        Modal.error({
+          title: '提示',
+          content: '请输入密码'
+        })
+      } else {
+        let result = await authService.adminLogin(this.state.phone, this.state.pwd)
+        message.info(result.stat)
+        if (result.stat === '1') {
+          localStorage.setItem('adminId', result.UserId)
+          // console.log(localStorage.getItem('token'))
+          this.props.history.push('/home')
+          message.success('登录成功')
+        } else {
+          throw result.stat
+        }
+        // if (this.state.name === 'admin' && this.state.pwd === '123qwe') {
+        //   if(this.state.identity === 'admin'){
+        //     localStorage.setItem('identity', '1')
+        //   } else if(this.state.identity === 'restaurant'){
+        //     localStorage.setItem('identity', '2')
+        //   }
+        //   // console.log(this.state.identity)
+          
+        //   this.props.history.push('/home')
+        //   message.success('登录成功')
+        // } 
+        // else if (this.state.name === 'restaurant' && this.state.pwd === '888888') {
+        //   localStorage.setItem('identity', '2')
+        //   this.props.history.push('/home')
+        //   message.success('登录成功')
+        // } 
+        // else {
+        //   message.error('登录失败')
+        // }
+      }
+
+    } catch (error) {
+      if (typeof error === 'string') {
+        Modal.error({
+          title: '提示',
+          content: checked.checkError(error)
+        })
+      } else {
+        Modal.error({
+          title: '提示',
+          content: JSON.stringify(error)
         })
       }
     }

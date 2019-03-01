@@ -1,4 +1,4 @@
-import {SkuAndSkuTypeInfo,ManagerInfo } from './Model'
+import {SkuAndSkuTypeInfo,ManagerInfo,UserInfo } from './Model'
 import * as model from './Model'
 
 export interface BaseResponse {
@@ -89,6 +89,20 @@ export interface AdminForkTokenResponse extends BaseResponse{
  * 管理员登录
  */
 export interface AdminLoginResponse extends BaseResponse{
-    token:string
-    user:ManagerInfo
+    UserId:string
+    // user:ManagerInfo
 }
+
+/**
+ * 管理员获取用户列表
+ */
+export interface AdminGetAllUserResponse extends BaseResponse{
+    user:UserInfo[]
+ }
+
+ /**
+  * 餐厅登录
+  */
+ export interface RestauLoginResponse extends BaseResponse{
+    RestaurantID:string
+ }

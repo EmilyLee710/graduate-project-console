@@ -61,10 +61,6 @@ export default class UserManagement extends React.Component<RouteComponentProps<
                         <label className='width-title'>电话：</label>
                         <Input style={{ width: 200 }} />
                     </div>
-                    <div className='flex padding-top'>
-                        <label className='width-title'>住址：</label>
-                        <Input style={{ width: 200 }} />
-                    </div>
                 </Content>
                 <Footer style={{ backgroundColor: 'white' }}>
                     <div className='footer'>

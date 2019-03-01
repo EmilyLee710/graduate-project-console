@@ -1,5 +1,5 @@
-import { AdminLoginRequest } from '../interfaces/Request'
-import { BaseResponse, AdminLoginResponse } from '../interfaces/Response'
+import { AdminLoginRequest ,RestaurantLoginRequest} from '../interfaces/Request'
+import { BaseResponse, AdminLoginResponse,RestauLoginResponse } from '../interfaces/Response'
 import * as httpService from './Http'
 
 /**
@@ -7,10 +7,19 @@ import * as httpService from './Http'
 // * @param name
 // * @param pwd
 */
-export function login(name: string, pwd: string) {
-  return httpService.post<AdminLoginResponse,AdminLoginRequest>('/api/admin/AdminLogin', {
-    name,
-    pwd
+export function adminLogin(phone: string, passwd: string) {
+  return httpService.post<AdminLoginResponse,AdminLoginRequest>('/api/AdminLogin', {
+    phone,
+    passwd
+  });
+}
+/**
+ * 餐厅登录
+ */
+export function restauLogin(phone: string, passwd: string) {
+  return httpService.post<RestauLoginResponse,RestaurantLoginRequest>('/api/RestaurantLogin', {
+    phone,
+    passwd
   });
 }
 /**

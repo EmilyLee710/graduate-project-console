@@ -101,7 +101,7 @@ export default class UserManagement extends React.Component<RouteComponentProps<
         dataIndex: 'phone'
     }, {
         title: '操作',
-        key: 'id',
+        key: 'operation',
         align: 'center',
         render: (text, record) => (
             <Row type="flex" gutter={16} justify="center">

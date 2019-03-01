@@ -26,6 +26,28 @@ export default new class {
       return '售后完成'
     }
   }
+  
+
+  formatTime(num: number) {
+    let date = new Date(num)
+    let year = `${date.getFullYear()}`
+    let mouth = (date.getMonth() + 1) < 10 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`
+    let day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`
+    let hour = date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`
+    let minute = date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`
+
+    return `${year}-${mouth}-${day}   ${hour}:${minute}`
+  }
+
+  checkSex(type:number){
+    if(type === 0){
+      return '男'
+    } else if(type === 1){
+      return '女'
+    } else if(type === 2){
+      return '保密'
+    }
+  }
 
   timestampToDate(timestamp:number) {
     var date = new Date(timestamp),

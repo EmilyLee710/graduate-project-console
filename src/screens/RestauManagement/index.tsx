@@ -112,7 +112,7 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
         width:'25%'
     }, {
         title: '操作',
-        key: 'id',
+        key: 'operation',
         align: 'center',
         render: (text, record) => (
             <Row type="flex" gutter={16} justify="center">

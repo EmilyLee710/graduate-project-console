@@ -23,7 +23,7 @@ interface RouteMenuList {
 const routeMenu: RouteMenuList[] = [{
   key: 'usermanagement',
   title:'用户管理',
-  icon:'shopping-cart',
+  icon:'team',
   status:true,
   component:UserManagementComponent,
   children:[],
@@ -45,7 +45,7 @@ const routeMenu: RouteMenuList[] = [{
 }, {
   key: 'adminmanagement',
   title:'管理员管理',
-  icon:'shop',
+  icon:'user',
   status:true,
   component:AdminManagementComponent,
   children:[],
@@ -56,7 +56,7 @@ const routeMenu: RouteMenuList[] = [{
 },  {
   key: 'operation',
   title:'运营管理',
-  icon:'user',
+  icon:'book',
   status:true,
   component:OperationComponent,
   children:[],
