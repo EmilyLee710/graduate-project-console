@@ -358,12 +358,14 @@ export interface ConfigInfo{
  export interface RestauInfo{
    id:number,
    ctime:number,
-   name:string,
-   passwd:string,
+   restauname:string,
    phone:string,
    address:string,
-   license:string,
-   cover_url:string
+   licence:string,
+   cover_url:string,
+   cuisinelist:RestauCuiItem[],
+   collect_num:number,
+   description:string
  }
 
  export interface OrderCuisineInfo{
@@ -387,11 +389,21 @@ export interface ConfigInfo{
  export interface CuisineInfo{
    id:number,
    ctime:number,
-   name:string,
+   c_name:string,
    tag:string,
    price:number,
    coverUrl:string,
    detailUrls:string[]
+ }
+
+ export interface RestauCuiItem{
+   id:number,
+   c_name:string,
+   price:number,
+   cover_url:string,
+   origin_price:number,
+   ctime:number,
+   tag:string
  }
 
  export interface AdminInfo{
@@ -401,4 +413,11 @@ export interface ConfigInfo{
    phone:string,
    ctime:number,
    sex:number
+ }
+
+ export interface RestauListItem{
+   id:number,
+   restaurantname:string,
+   address:string,
+   ctime:number
  }

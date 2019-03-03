@@ -2,12 +2,14 @@ import * as httpService from './Http'
 
 import 
  {
-    AdminGetAllUserRequest
+    AdminGetAllUserRequest,
+    AdminDelUserRequest
  } from '../interfaces/Request'
 
  import
  {
-    AdminGetAllUserResponse
+    AdminGetAllUserResponse,
+    BaseResponse
  } from '../interfaces/Response'
 
  export function AdminGetAllUser(opt:AdminGetAllUserRequest){
@@ -15,3 +17,9 @@ import
         opt
     )
  }
+
+ export function AdminDelUser(opt:AdminDelUserRequest){
+   return httpService.post<BaseResponse,AdminDelUserRequest>('/api/AdminDelUser',
+       opt
+   )
+}

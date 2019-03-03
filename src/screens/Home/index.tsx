@@ -65,10 +65,10 @@ export default class extends React.Component<RouteComponentProps<any>> {
               <Col span={5}></Col>
               <Col span={3}></Col>
               <Col span={2}>
-                <Avatar size="large" icon="user" />
+                <Avatar size="large" src={require('../../assets/cat.png')}/>
               </Col>
               <Col span={2}>
-                <p>管理员</p>
+                <p>{this.checkIdentity(localStorage.getItem('identity'))}</p>
               </Col>
               <Col span={2}>
                 <a>退出</a>
@@ -172,6 +172,14 @@ export default class extends React.Component<RouteComponentProps<any>> {
         })
       }
     }
+  }
+
+  checkIdentity(type:string){
+     if(type === '1'){
+       return "管理员"
+     } else if(type === '2'){
+       return "餐厅"
+     }
   }
   componentWillMount() {
     //监控store中值的变化

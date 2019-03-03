@@ -106,3 +106,31 @@ export interface AdminGetAllUserResponse extends BaseResponse{
  export interface RestauLoginResponse extends BaseResponse{
     RestaurantID:string
  }
+
+ /**
+  * 管理员获取全部餐厅
+  */
+export interface AdminGetAllRestauResponse{
+    restaurant:model.RestauListItem[]
+}
+
+/**
+ * 管理员查看单个餐厅信息
+ */
+export interface AdminGetResInfoResponse{
+    restaurant:model.RestauInfo
+}
+
+/**
+ * 管理员添加餐厅
+ */
+export interface AdminAddRestaurantResponse extends BaseResponse{
+    restaurantID:number
+}
+
+/**
+ * 管理员删除餐厅
+ */
+export interface AdminDelRestauResponse{
+    
+}

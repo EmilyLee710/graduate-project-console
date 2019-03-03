@@ -121,7 +121,7 @@ export default class UserManagement extends React.Component<RouteComponentProps<
         render: (text, record) => (
             <Row type="flex" gutter={16} justify="center">
                 {/* <Col><a onClick={()=>this.view(record.id)}>查看</a></Col> */}
-                <Col><a onClick={()=>this.delres()}>删除</a></Col>
+                <Col><a onClick={()=>this.delres(record.id)}>删除</a></Col>
             </Row>
         )
     }]
@@ -137,10 +137,35 @@ export default class UserManagement extends React.Component<RouteComponentProps<
         )
       }
 
-    delres(){
+    async delUser(id:number){
+        try {
+            const result = await UserService.AdminDelUser({
+              // token:token,
+              userID: id
+            })
+            if (result.stat === '1') {
+              // console.log("stat", result.stat)
+              message.success('删除成功')
+            } else {
+              throw result.stat
+            }
+          } catch (error) {
+            Modal.error({
+              title: '提示错误',
+              content: '删除失败'
+            })
+          }
+    }
+
+    delres(id:number){
+        let that = this
         confirm({
             title:'确定删除该用户吗？',
-            onOk(){},
+            onOk(){
+               that.delUser(id).then(()=>{
+                   that.getUserlist()
+               })
+            },
             onCancel(){}
         })
     }

@@ -172,7 +172,7 @@ export default class extends React.Component<RouteComponentProps<any>> {
         })
       } else {
         let result = await authService.adminLogin(this.state.phone, this.state.pwd)
-        message.info(result.stat)
+        // message.info(result.stat)
         if (result.stat === '1') {
           localStorage.setItem('adminId', result.UserId)
           // console.log(localStorage.getItem('token'))

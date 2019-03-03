@@ -37,7 +37,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     cuisine: {
       id: 0,
       ctime: 0,
-      name: '',
+      c_name: '',
       tag: '',
       price: 0,
       coverUrl: '',
@@ -82,7 +82,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
             <label className='width-title'>菜品名称:</label>
             <Input
               style={{ width: 200 }}
-              value={cuisine.name}
+              value={cuisine.c_name}
               onChange={(event) => { this.setValue('name', event.target.value.trim()) }}
               disabled={this.state.disabled} />
           </div>
@@ -257,7 +257,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
 
   verifyDataForm() {
     // console.log('verifyDataForm')
-    if (this.state.cuisine.name === '' ||
+    if (this.state.cuisine.c_name === '' ||
       this.state.price === '' ||
       this.state.tag === null) {
       Modal.error({
@@ -334,7 +334,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         cuisine: {
           id: null,
           ctime: 0,
-          name: '',
+          c_name: '',
           tag: '',
           price: null,
           coverUrl: '',
@@ -364,7 +364,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
       const result = await SkuApi.AdminSetSku({
         // token: token,
         skuId: preCommodity.id,
-        name: preCommodity.name,
+        name: preCommodity.c_name,
         images: [],
         details: '',
         total_stock: 0,
@@ -398,7 +398,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
       // console.log('skuTypeIds', skuTypeIds)
       const result = await SkuApi.AdminAddSku({
         // token: token,
-        name: preCommodity.name,
+        name: preCommodity.c_name,
         images: [],
         details: '',
         total_stock: 0,
