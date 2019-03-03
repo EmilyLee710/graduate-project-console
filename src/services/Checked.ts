@@ -26,6 +26,16 @@ export default new class {
       return '售后完成'
     }
   }
+
+  checkLoginStat(value:string){
+    if(value === '1'){
+        return '登陆成功'
+    } else if(value === '0'){
+        return '密码错误'
+    } else if(value === '-1'){
+        return '账户不存在'
+    }
+}
   
 
   formatTime(num: number) {

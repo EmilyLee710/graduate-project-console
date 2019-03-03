@@ -43,17 +43,6 @@ const routeMenu: RouteMenuList[] = [{
     component:AddRestaurantComponent
   }]
 }, {
-  key: 'adminmanagement',
-  title:'管理员管理',
-  icon:'user',
-  status:true,
-  component:AdminManagementComponent,
-  children:[],
-  listRoute:[{
-    key:'addadmin',
-    component:AddAdminComponent
-  }]
-},  {
   key: 'operation',
   title:'运营管理',
   icon:'book',

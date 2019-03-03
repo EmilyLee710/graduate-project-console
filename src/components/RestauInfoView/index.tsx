@@ -37,7 +37,8 @@ export default class extends React.Component<Props, State>{
             cover_url: '',
             cuisinelist: [],
             collect_num: null,
-            description: ''
+            description: '',
+            sale_info:''
         },
         cuisinelist: []
     }
@@ -78,6 +79,7 @@ export default class extends React.Component<Props, State>{
                             <p>电话：{this.state.restauInfo.phone}</p>
                             <p>地址：{this.state.restauInfo.address}</p>
                             <p>描述：{this.state.restauInfo.description}</p>
+                            <p>促销信息：{this.state.restauInfo.sale_info}</p>
                             <p>收藏量：{this.state.restauInfo.collect_num}</p>
                             <p>创建时间：{checkService.timestampToDate(this.state.restauInfo.ctime)}</p>
                         </div>

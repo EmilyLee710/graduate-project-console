@@ -14398,12 +14398,6 @@ textarea.ant-input-number {
   display: flex;
   justify-content: center;
 }
-.admin-management-style .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-}
 .add-admin-style .flex {
   display: flex;
   align-items: center;
@@ -14705,4 +14699,4 @@ textarea.ant-input-number {
   flex-flow: row wrap;
 }
 
-/*# sourceMappingURL=index.css.map?v=1eb569*/
+/*# sourceMappingURL=index.css.map?v=1793d3*/

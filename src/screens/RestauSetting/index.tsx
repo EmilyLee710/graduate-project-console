@@ -81,13 +81,34 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
                                 action={"/upload/form"}
                             />
                         </div>
-                    </div>
-                    
+                    </div>   
                     <div className='flex padding-top'>
                         <div className='width-title'>餐厅电话:</div>
                         <Input
                             style={{ width: 150 }}
-                            min={1} max={10000000}
+                            // min={1} max={10000000}
+                            // value={ConfigInfo.freight_config}
+                            // onChange={(value) => { this.setValue('freight_config', value) }}
+                            // disabled={this.state.disabled} 
+                            />
+                        {/* <Button style={{ marginLeft: 10 }} type='primary' onClick={this.transferFee.bind(this)}>确定</Button> */}
+                    </div>
+                    <div className='flex padding-top'>
+                        <div className='width-title'>餐厅描述:</div>
+                        <Input
+                            style={{ width: 500 }}
+                            // min={1} max={10000000}
+                            // value={ConfigInfo.freight_config}
+                            // onChange={(value) => { this.setValue('freight_config', value) }}
+                            // disabled={this.state.disabled} 
+                            />
+                        {/* <Button style={{ marginLeft: 10 }} type='primary' onClick={this.transferFee.bind(this)}>确定</Button> */}
+                    </div>
+                    <div className='flex padding-top'>
+                        <div className='width-title'>促销活动:</div>
+                        <Input
+                            style={{ width: 500 }}
+                            // min={1} max={10000000}
                             // value={ConfigInfo.freight_config}
                             // onChange={(value) => { this.setValue('freight_config', value) }}
                             // disabled={this.state.disabled} 

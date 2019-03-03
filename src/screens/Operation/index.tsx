@@ -210,7 +210,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   }
 
   updateImgs(value: string[], position: number) {
-    // console.log('value',value, 'position', position)
+    console.log('value',value, 'position', position)
     if (value.length === 0) value.push('')
     this.state.addCoverImgs[position] = {
         uid: -1,
@@ -222,7 +222,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         thumbUrl:value[0]
       }
    
-    // console.log('cover:', this.state.addCoverImgs)
+    console.log('cover:', this.state.addCoverImgs)
     // console.log('img',imgs)
     this.setState({
       addCoverImgs: this.state.addCoverImgs

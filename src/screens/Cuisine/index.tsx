@@ -100,7 +100,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
 
   columns: ColumnProps<CuisineInfo>[] = [{
     title: '菜品名称',
-    dataIndex: 'name',
+    dataIndex: 'c_name',
     align: 'center',
   }, {
     title: '标签',
@@ -296,7 +296,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   componentDidMount() {
     store.dispatch({
       type: 'SET_MENU',
-      menu: 'commodity'
+      menu: 'cuisine'
     })
     store.dispatch({
       type: 'SET_TITLE',

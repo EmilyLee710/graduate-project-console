@@ -3,8 +3,8 @@ import * as model from '../../interfaces/Model'
 const list: model.CuisineInfo[] = [{
     id:1,
     ctime:0,
-    c_name:'',
-    tag:'',
+    c_name:'麻婆豆腐',
+    tag:'川菜',
     price:23,
     coverUrl:'',
     detailUrls:[]

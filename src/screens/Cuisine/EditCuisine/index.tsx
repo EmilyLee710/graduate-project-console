@@ -92,7 +92,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
               {/*使用上传组件，传入*/}  {/*存疑*/}
               <UploadImage
                 propsImgs={this.state.defaultCoverImgs}
-                maxImage={3}
+                maxImage={1}
                 updateStateProp={this.uploadChange_addCovors.bind(this)}
                 action={"/upload/form"}
                 disabled={this.state.disabled} />

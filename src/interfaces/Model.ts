@@ -365,7 +365,8 @@ export interface ConfigInfo{
    cover_url:string,
    cuisinelist:RestauCuiItem[],
    collect_num:number,
-   description:string
+   description:string,
+   sale_info:string
  }
 
  export interface OrderCuisineInfo{

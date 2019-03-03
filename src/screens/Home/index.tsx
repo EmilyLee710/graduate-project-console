@@ -70,9 +70,9 @@ export default class extends React.Component<RouteComponentProps<any>> {
               <Col span={2}>
                 <p>{this.checkIdentity(localStorage.getItem('identity'))}</p>
               </Col>
-              <Col span={2}>
-                <a>退出</a>
-              </Col>
+              {/* <Col span={2}>
+                <a onClick={()=>this.props.location.pathname = 'login'}>退出</a>
+              </Col> */}
             </Row>
           </Header>
           <Content>

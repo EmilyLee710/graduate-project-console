@@ -1633,6 +1633,17 @@ var _initialiseProps = function _initialiseProps() {
             return '售后完成';
         }
     };
+    class_1.prototype.checkLoginStat = function (value) {
+        if (value === '1') {
+            return '登陆成功';
+        }
+        else if (value === '0') {
+            return '密码错误';
+        }
+        else if (value === '-1') {
+            return '账户不存在';
+        }
+    };
     class_1.prototype.formatTime = function (num) {
         var date = new Date(num);
         var year = "" + date.getFullYear();
@@ -16597,36 +16608,7 @@ var propTypes = {
 var Panel = __WEBPACK_IMPORTED_MODULE_0__Collapse__["a" /* default */].Panel;
 
 /***/ }),
-/* 405 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var list = [{
-        id: 1,
-        name: 'admin',
-        passwd: '123qwe',
-        phone: '12345678901',
-        ctime: 0,
-        sex: 0
-    }, {
-        id: 2,
-        name: 'Jerry',
-        passwd: '666666',
-        phone: '18974563202',
-        ctime: 0,
-        sex: 1
-    }, {
-        id: 3,
-        name: 'hhh',
-        passwd: '888888',
-        phone: '15346978920',
-        ctime: 0,
-        sex: 2
-    }];
-/* harmony default export */ __webpack_exports__["a"] = (list);
-
-
-/***/ }),
+/* 405 */,
 /* 406 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -16712,8 +16694,8 @@ function AdminSetSku(opt) {
 var list = [{
         id: 1,
         ctime: 0,
-        c_name: '',
-        tag: '',
+        c_name: '麻婆豆腐',
+        tag: '川菜',
         price: 23,
         coverUrl: '',
         detailUrls: []
@@ -21330,9 +21312,9 @@ var default_1 = (function (_super) {
                     case 2: return [4, __WEBPACK_IMPORTED_MODULE_18__services_Auth__["c" /* restauLogin */](this.state.phone, this.state.pwd)];
                     case 3:
                         result = _a.sent();
-                        __WEBPACK_IMPORTED_MODULE_11_antd_es_message__["a" /* default */].info(result.stat);
                         if (result.stat === '1') {
                             localStorage.setItem('restauId', result.RestaurantID);
+                            localStorage.setItem('identity', '2');
                             this.props.history.push('/home');
                             __WEBPACK_IMPORTED_MODULE_11_antd_es_message__["a" /* default */].success('登录成功');
                         }
@@ -21346,7 +21328,7 @@ var default_1 = (function (_super) {
                         if (typeof error_1 === 'string') {
                             __WEBPACK_IMPORTED_MODULE_9_antd_es_modal__["a" /* default */].error({
                                 title: '提示',
-                                content: __WEBPACK_IMPORTED_MODULE_19__services_Checked__["a" /* default */].checkError(error_1)
+                                content: __WEBPACK_IMPORTED_MODULE_19__services_Checked__["a" /* default */].checkLoginStat(error_1)
                             });
                         }
                         else {
@@ -21398,6 +21380,7 @@ var default_1 = (function (_super) {
                         result = _a.sent();
                         if (result.stat === '1') {
                             localStorage.setItem('adminId', result.UserId);
+                            localStorage.setItem('identity', '1');
                             this.props.history.push('/home');
                             __WEBPACK_IMPORTED_MODULE_11_antd_es_message__["a" /* default */].success('登录成功');
                         }
@@ -21411,7 +21394,7 @@ var default_1 = (function (_super) {
                         if (typeof error_2 === 'string') {
                             __WEBPACK_IMPORTED_MODULE_9_antd_es_modal__["a" /* default */].error({
                                 title: '提示',
-                                content: __WEBPACK_IMPORTED_MODULE_19__services_Checked__["a" /* default */].checkError(error_2)
+                                content: __WEBPACK_IMPORTED_MODULE_19__services_Checked__["a" /* default */].checkLoginStat(error_2)
                             });
                         }
                         else {
@@ -35299,9 +35282,7 @@ var default_1 = (function (_super) {
                         __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_15_antd_es_col__["a" /* default */], { span: 2 },
                             __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_17_antd_es_avatar__["a" /* default */], { size: "large", src: __webpack_require__(904) })),
                         __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_15_antd_es_col__["a" /* default */], { span: 2 },
-                            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null, this.checkIdentity(localStorage.getItem('identity')))),
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_15_antd_es_col__["a" /* default */], { span: 2 },
-                            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("a", null, "\u9000\u51FA")))),
+                            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null, this.checkIdentity(localStorage.getItem('identity')))))),
                 __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](Content, null,
                     this.state.identity === '1' ?
                         __WEBPACK_IMPORTED_MODULE_23__IRouteMenuAdmin__["a" /* default */].map(function (item, i) {
@@ -38598,10 +38579,8 @@ function applyMiddleware() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UserManagement__ = __webpack_require__(681);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__RestauManagement__ = __webpack_require__(860);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__RestauManagement_AddRestaurant__ = __webpack_require__(864);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__AdminManagement__ = __webpack_require__(866);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__AdminManagement_AddAdmin__ = __webpack_require__(870);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Operation__ = __webpack_require__(872);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__AdminManagement_AddAdmin__ = __webpack_require__(870);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Operation__ = __webpack_require__(872);
 
 
 
@@ -38616,7 +38595,7 @@ var routeMenu = [{
         children: [],
         listRoute: [{
                 key: 'addadmin',
-                component: __WEBPACK_IMPORTED_MODULE_4__AdminManagement_AddAdmin__["a" /* default */]
+                component: __WEBPACK_IMPORTED_MODULE_3__AdminManagement_AddAdmin__["a" /* default */]
             }]
     }, {
         key: 'restaumanagement',
@@ -38630,22 +38609,11 @@ var routeMenu = [{
                 component: __WEBPACK_IMPORTED_MODULE_2__RestauManagement_AddRestaurant__["a" /* default */]
             }]
     }, {
-        key: 'adminmanagement',
-        title: '管理员管理',
-        icon: 'user',
-        status: true,
-        component: __WEBPACK_IMPORTED_MODULE_3__AdminManagement__["a" /* default */],
-        children: [],
-        listRoute: [{
-                key: 'addadmin',
-                component: __WEBPACK_IMPORTED_MODULE_4__AdminManagement_AddAdmin__["a" /* default */]
-            }]
-    }, {
         key: 'operation',
         title: '运营管理',
         icon: 'book',
         status: true,
-        component: __WEBPACK_IMPORTED_MODULE_5__Operation__["a" /* default */],
+        component: __WEBPACK_IMPORTED_MODULE_4__Operation__["a" /* default */],
         children: [],
         listRoute: []
     }];
@@ -53658,7 +53626,8 @@ var default_1 = (function (_super) {
                 cover_url: '',
                 cuisinelist: [],
                 collect_num: null,
-                description: ''
+                description: '',
+                sale_info: ''
             },
             cuisinelist: []
         };
@@ -53696,6 +53665,9 @@ var default_1 = (function (_super) {
                         __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null,
                             "\u63CF\u8FF0\uFF1A",
                             this.state.restauInfo.description),
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null,
+                            "\u4FC3\u9500\u4FE1\u606F\uFF1A",
+                            this.state.restauInfo.sale_info),
                         __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null,
                             "\u6536\u85CF\u91CF\uFF1A",
                             this.state.restauInfo.collect_num),
@@ -53969,394 +53941,10 @@ var UserManagement = (function (_super) {
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 866 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_antd_es_table__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_antd_es_table_style_css_js__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_antd_es_button__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_antd_es_button_style_css_js__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_antd_es_row__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_antd_es_row_style_css_js__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_antd_es_col__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_antd_es_col_style_css_js__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_antd_es_form__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_antd_es_form_style_css_js__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_antd_es_input__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_antd_es_input_style_css_js__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_antd_es_modal__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_antd_es_modal_style_css_js__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_antd_es_layout__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_antd_es_layout_style_css_js__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_antd_es_input_number__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_antd_es_input_number_style_css_js__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_antd_es_upload__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_antd_es_upload_style_css_js__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21_antd_es_icon__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22_antd_es_icon_style_css_js__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_antd_es_message__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24_antd_es_message_style_css_js__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25_antd_es_tag__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26_antd_es_tag_style_css_js__ = __webpack_require__(57);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__style_less__ = __webpack_require__(867);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__style_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_27__style_less__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__Store__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29_mount_react__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_29_mount_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_29_mount_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_30__components_AdminInfoView__ = __webpack_require__(868);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_31__AdminList__ = __webpack_require__(405);
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var Header = __WEBPACK_IMPORTED_MODULE_15_antd_es_layout__["a" /* default */].Header, Footer = __WEBPACK_IMPORTED_MODULE_15_antd_es_layout__["a" /* default */].Footer, Sider = __WEBPACK_IMPORTED_MODULE_15_antd_es_layout__["a" /* default */].Sider, Content = __WEBPACK_IMPORTED_MODULE_15_antd_es_layout__["a" /* default */].Content;
-var Search = __WEBPACK_IMPORTED_MODULE_11_antd_es_input__["a" /* default */].Search;
-var confirm = __WEBPACK_IMPORTED_MODULE_13_antd_es_modal__["a" /* default */].confirm;
-var UserManagement = (function (_super) {
-    __extends(UserManagement, _super);
-    function UserManagement() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.state = {
-            selectedRowKeys: [],
-            userList: [],
-            total: 0,
-            title: null,
-            pageIndex: 1,
-            pageSize: 15,
-            deleted: false,
-            isSearch: false,
-            searchContent: ''
-        };
-        _this.columns = [{
-                title: '用户ID',
-                align: 'center',
-                dataIndex: 'id'
-            }, {
-                title: '用户昵称',
-                align: 'center',
-                dataIndex: 'name'
-            }, {
-                title: '用户密码',
-                align: 'center',
-                dataIndex: 'passwd'
-            }, {
-                title: '电话',
-                align: 'center',
-                dataIndex: 'phone'
-            }, {
-                title: '操作',
-                key: 'operation',
-                align: 'center',
-                render: function (text, record) { return (__WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_5_antd_es_row__["a" /* default */], { type: "flex", gutter: 16, justify: "center" },
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_7_antd_es_col__["a" /* default */], null,
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("a", { onClick: function () { return _this.view(record.id); } }, "\u67E5\u770B")),
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_7_antd_es_col__["a" /* default */], null,
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("a", { onClick: function () { return _this.delres(); } }, "\u5220\u9664")))); }
-            }];
-        _this.onSelectChange = function (selectedRowKeys) {
-            _this.setState({ selectedRowKeys: selectedRowKeys });
-        };
-        return _this;
-    }
-    UserManagement.prototype.render = function () {
-        var _this = this;
-        var selectedRowKeys = this.state.selectedRowKeys;
-        var rowSelection = {
-            selectedRowKeys: selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
-        return (__WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_15_antd_es_layout__["a" /* default */], { className: 'admin-management-style' },
-            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](Header, { className: 'header' },
-                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_3_antd_es_button__["a" /* default */], { type: 'primary', onClick: function () { return _this.props.history.push(_this.props.match.url + "/addadmin"); } }, "\u6DFB\u52A0\u7BA1\u7406\u5458")),
-                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null,
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](Search, { placeholder: "\u8BF7\u641C\u7D22\u7BA1\u7406\u5458\u540D\u79F0", enterButton: true }))),
-            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](Content, null,
-                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_1_antd_es_table__["a" /* default */], { rowSelection: rowSelection, columns: this.columns, rowKey: function (record) { return record.id.toString(); }, dataSource: this.state.userList, pagination: {
-                        showTotal: function (total) { return __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("span", null,
-                            "\u5171",
-                            total,
-                            "\u6761"); }
-                    } }))));
-    };
-    UserManagement.prototype.view = function (record) {
-        var unmount = __WEBPACK_IMPORTED_MODULE_29_mount_react___default()(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_30__components_AdminInfoView__["a" /* default */], { id: record }));
-    };
-    UserManagement.prototype.delres = function () {
-        confirm({
-            title: '确定删除该用户吗？',
-            onOk: function () { },
-            onCancel: function () { }
-        });
-    };
-    UserManagement.prototype.componentWillMount = function () {
-        var alluser = __WEBPACK_IMPORTED_MODULE_31__AdminList__["a" /* default */].map(function (item, i) {
-            return item;
-        });
-        this.setState({
-            userList: alluser
-        });
-    };
-    UserManagement.prototype.componentDidMount = function () {
-        __WEBPACK_IMPORTED_MODULE_28__Store__["a" /* default */].dispatch({
-            type: 'SET_MENU',
-            menu: 'adminmanagement'
-        });
-        __WEBPACK_IMPORTED_MODULE_28__Store__["a" /* default */].dispatch({
-            type: 'SET_TITLE',
-            title: '管理员管理'
-        });
-    };
-    return UserManagement;
-}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]));
-/* harmony default export */ __webpack_exports__["a"] = (UserManagement);
-
-
-/***/ }),
-/* 867 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 868 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_antd_es_layout__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_antd_es_layout_style_css_js__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_antd_es_button__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_antd_es_button_style_css_js__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_antd_es_table__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_antd_es_table_style_css_js__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_antd_es_input__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_antd_es_input_style_css_js__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_antd_es_select__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_antd_es_select_style_css_js__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_antd_es_row__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_antd_es_row_style_css_js__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_antd_es_col__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_antd_es_col_style_css_js__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_antd_es_modal__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_antd_es_modal_style_css_js__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_antd_es_collapse__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_antd_es_collapse_style_css_js__ = __webpack_require__(83);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_antd_es_message__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20_antd_es_message_style_css_js__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__screens_AdminManagement_AdminList__ = __webpack_require__(405);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__services_OrderApi__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__services_OrderApi___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_22__services_OrderApi__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__services_Checked__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__style_less__ = __webpack_require__(869);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__style_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_24__style_less__);
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var default_1 = (function (_super) {
-    __extends(default_1, _super);
-    function default_1() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.state = {
-            visible: true,
-            adminInfo: {
-                id: null,
-                ctime: 0,
-                name: '',
-                passwd: '',
-                phone: '',
-                sex: 0
-            }
-        };
-        return _this;
-    }
-    default_1.prototype.render = function () {
-        var Panel = __WEBPACK_IMPORTED_MODULE_17_antd_es_collapse__["a" /* default */].Panel;
-        return (__WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_15_antd_es_modal__["a" /* default */], { title: '\u7528\u6237\u4FE1\u606F', maskClosable: false, visible: this.state.visible, onOk: this.close.bind(this), onCancel: this.close.bind(this), destroyOnClose: true },
-            __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'content' },
-                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null,
-                    "\u7BA1\u7406\u5458\u6635\u79F0\uFF1A",
-                    this.state.adminInfo.name),
-                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null,
-                    "\u7528\u6237\u5BC6\u7801:",
-                    this.state.adminInfo.passwd),
-                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null,
-                    "\u624B\u673A\u53F7\uFF1A",
-                    this.state.adminInfo.phone),
-                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("p", null,
-                    "\u521B\u5EFA\u65F6\u95F4\uFF1A",
-                    __WEBPACK_IMPORTED_MODULE_23__services_Checked__["a" /* default */].timestampToDate(this.state.adminInfo.ctime)))));
-    };
-    default_1.prototype.close = function () {
-        this.setState({
-            visible: false
-        });
-    };
-    default_1.prototype.callback = function (key) {
-    };
-    default_1.prototype.getOrderInfo = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var id, token, result, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        id = this.props.id;
-                        token = localStorage.getItem('token');
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4, __WEBPACK_IMPORTED_MODULE_22__services_OrderApi__["AdminOrderInfo"]({
-                                orderId: id
-                            })];
-                    case 2:
-                        result = _a.sent();
-                        if (result.stat === 'ok') {
-                        }
-                        else {
-                            throw result.stat;
-                        }
-                        return [3, 4];
-                    case 3:
-                        error_1 = _a.sent();
-                        __WEBPACK_IMPORTED_MODULE_19_antd_es_message__["a" /* default */].error(error_1);
-                        return [3, 4];
-                    case 4: return [2];
-                }
-            });
-        });
-    };
-    default_1.prototype.componentWillMount = function () {
-        var _this = this;
-        var id = this.props.id;
-        __WEBPACK_IMPORTED_MODULE_21__screens_AdminManagement_AdminList__["a" /* default */].map(function (item, i) {
-            if (item.id === id) {
-                _this.setState({
-                    adminInfo: item
-                });
-            }
-        });
-    };
-    return default_1;
-}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]));
-/* harmony default export */ __webpack_exports__["a"] = (default_1);
-
-
-/***/ }),
-/* 869 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 866 */,
+/* 867 */,
+/* 868 */,
+/* 869 */,
 /* 870 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -54751,6 +54339,7 @@ var default_1 = (function (_super) {
         });
     };
     default_1.prototype.updateImgs = function (value, position) {
+        console.log('value', value, 'position', position);
         if (value.length === 0)
             value.push('');
         this.state.addCoverImgs[position] = {
@@ -54762,6 +54351,7 @@ var default_1 = (function (_super) {
             url: value[0],
             thumbUrl: value[0]
         };
+        console.log('cover:', this.state.addCoverImgs);
         this.setState({
             addCoverImgs: this.state.addCoverImgs
         });
@@ -55444,6 +55034,7 @@ var default_1 = (function (_super) {
                             images_1.push(item.response.url);
                     }
                 });
+                console.log('fileList', uploader.fileList);
                 _this.props.updateStateProp(images_1, _this.props.position);
             }
         };
@@ -55651,7 +55242,7 @@ var default_1 = (function (_super) {
         };
         _this.columns = [{
                 title: '菜品名称',
-                dataIndex: 'name',
+                dataIndex: 'c_name',
                 align: 'center',
             }, {
                 title: '标签',
@@ -55858,7 +55449,7 @@ var default_1 = (function (_super) {
     default_1.prototype.componentDidMount = function () {
         __WEBPACK_IMPORTED_MODULE_26__Store__["a" /* default */].dispatch({
             type: 'SET_MENU',
-            menu: 'commodity'
+            menu: 'cuisine'
         });
         __WEBPACK_IMPORTED_MODULE_26__Store__["a" /* default */].dispatch({
             type: 'SET_TITLE',
@@ -56586,7 +56177,7 @@ var default_1 = (function (_super) {
                     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'width-title' }, "\u5C01\u9762\u56FE:"),
                     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { style: { width: "100%" } },
                         "  ",
-                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_25__components_UploadImageForsku__["a" /* default */], { propsImgs: this.state.defaultCoverImgs, maxImage: 3, updateStateProp: this.uploadChange_addCovors.bind(this), action: "/upload/form", disabled: this.state.disabled }))),
+                        __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_25__components_UploadImageForsku__["a" /* default */], { propsImgs: this.state.defaultCoverImgs, maxImage: 1, updateStateProp: this.uploadChange_addCovors.bind(this), action: "/upload/form", disabled: this.state.disabled }))),
                 __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'flex padding-top' },
                     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'flex margin-right' },
                         __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'width-title' },
@@ -58689,7 +58280,13 @@ var default_1 = (function (_super) {
                         __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_33__components_UploadImageForsku__["a" /* default */], { propsImgs: this.state.defaultCoverImgs, maxImage: 3, updateStateProp: this.uploadChange_addCovors.bind(this), action: "/upload/form" }))),
                 __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'flex padding-top' },
                     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'width-title' }, "\u9910\u5385\u7535\u8BDD:"),
-                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_11_antd_es_input__["a" /* default */], { style: { width: 150 }, min: 1, max: 10000000 })),
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_11_antd_es_input__["a" /* default */], { style: { width: 150 } })),
+                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'flex padding-top' },
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'width-title' }, "\u9910\u5385\u63CF\u8FF0:"),
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_11_antd_es_input__["a" /* default */], { style: { width: 500 } })),
+                __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'flex padding-top' },
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'width-title' }, "\u4FC3\u9500\u6D3B\u52A8:"),
+                    __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_11_antd_es_input__["a" /* default */], { style: { width: 500 } })),
                 __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", { className: 'flex padding-top' },
                     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"]("div", null, "\u9910\u5385\u5730\u5740:"),
                     __WEBPACK_IMPORTED_MODULE_0_react__["createElement"](__WEBPACK_IMPORTED_MODULE_11_antd_es_input__["a" /* default */], { placeholder: '\u8BF7\u8F93\u5165\u5730\u5740\u3001\u7535\u8BDD\u3001\u8054\u7CFB\u4EBA', style: { width: 500, marginLeft: 10 } })),
@@ -58730,4 +58327,4 @@ module.exports = __webpack_require__.p + "img/cat.png?v=762cdc";
 
 /***/ })
 ],[422]);
-//# sourceMappingURL=index.js.map?v=1eb569
+//# sourceMappingURL=index.js.map?v=1793d3

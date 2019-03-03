@@ -122,9 +122,10 @@ export default class extends React.Component<RouteComponentProps<any>> {
         })
       } else {
         let result = await authService.restauLogin(this.state.phone, this.state.pwd)
-        message.info(result.stat)
+        // message.info(result.stat)
         if (result.stat === '1') {
           localStorage.setItem('restauId', result.RestaurantID)
+          localStorage.setItem('identity', '2')
           // console.log(localStorage.getItem('token'))
           this.props.history.push('/home')
           message.success('登录成功')
@@ -137,7 +138,7 @@ export default class extends React.Component<RouteComponentProps<any>> {
       if (typeof error === 'string') {
         Modal.error({
           title: '提示',
-          content: checked.checkError(error)
+          content: checked.checkLoginStat(error)
         })
       } else {
         Modal.error({
@@ -175,6 +176,7 @@ export default class extends React.Component<RouteComponentProps<any>> {
         // message.info(result.stat)
         if (result.stat === '1') {
           localStorage.setItem('adminId', result.UserId)
+          localStorage.setItem('identity', '1')
           // console.log(localStorage.getItem('token'))
           this.props.history.push('/home')
           message.success('登录成功')
@@ -206,7 +208,7 @@ export default class extends React.Component<RouteComponentProps<any>> {
       if (typeof error === 'string') {
         Modal.error({
           title: '提示',
-          content: checked.checkError(error)
+          content: checked.checkLoginStat(error)
         })
       } else {
         Modal.error({

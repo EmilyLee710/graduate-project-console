@@ -70,7 +70,7 @@ export default class extends React.Component<Props,State>{
               //   images.push(item.url)//删除照片
             }
           })
-          // console.log('images',images)
+          console.log('fileList',uploader.fileList)
           this.props.updateStateProp(images,this.props.position)
         }   
       }
