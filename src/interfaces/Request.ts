@@ -285,3 +285,51 @@ export interface AdminAddRestaurantRequest{
 export interface AdminDelRestauRequest{
   restaurantID:number
 }
+
+/**
+ * 餐厅浏览本餐厅菜品
+ */
+export interface RestaurGetMyCuiRequest{
+  restaurantID:number
+}
+
+/**
+ * 餐厅添加菜品
+ */
+export interface RestauAddCuisineRequest{
+  restau_id:number,
+  price:number,
+  c_name:string,
+  origin_price:number,
+  cover_url:string,
+  detail_url:string,
+  tag:string
+}
+
+/**
+ * 餐厅查看菜品
+ */
+export interface RestauGetCuiInfoRequest{
+  CuisineId:number
+}
+
+/**
+ * 餐厅编辑菜品
+ */
+export interface RestauSetCuiInfoRequest{
+   CuisineId:number,
+   c_name:string,
+   price:number,
+   origin_price:number,
+   cover_url:string,
+   detail_url:string,
+   tag:string
+}
+
+/**
+ * 餐厅删除菜品
+ */
+
+export interface RestauDelCuisineRequest{
+  cuisineID:number[]
+}

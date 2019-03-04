@@ -74,7 +74,8 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
                 </Header>
                 <Content>
                     <Table
-                        rowSelection={rowSelection}
+                        // rowSelection={rowSelection}
+                        bordered
                         columns={this.columns}
                         rowKey={(record) => { return record.id.toString() }}  //设置uniquekey
                         dataSource={this.state.restauList}
@@ -150,7 +151,7 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
     async getRestauList(){
         try {
             let result = await RestaurantService.AdminGetAllRestau()
-            console.log('result',result.restaurant)
+            // console.log('result',result.restaurant)
             // let restaulist = result.restaurant.map((item,index)=>{
             //     return item
             // })

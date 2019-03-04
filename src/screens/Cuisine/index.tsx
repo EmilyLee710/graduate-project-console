@@ -7,16 +7,21 @@ import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 //redux+store
 
 import * as SkuApi from '../../services/SkuApi'
+import * as CuisineService from '../../services/CuisineApi'
+import CuisineInfoView from '../../components/CuisineInfoView'
+
+import mount from 'mount-react'
 
 import './style.less'
-import { CuisineInfo } from '../../interfaces/model'
+import { CuisineInfo, RestauCuiItem } from '../../interfaces/model'
 import cuisines from './CuisineList'
 import store from '../../Store'
+
 import { Unsubscribe } from 'redux'
 
 interface State {
   selectedRowKeys: number[]
-  cuisineList: CuisineInfo[]
+  cuisineList: RestauCuiItem[]
   total: number
   title: string
   pageIndex: number
@@ -31,7 +36,6 @@ const { Header, Footer, Sider, Content } = Layout;
 const Search = Input.Search;
 var token = localStorage.getItem('token')
 export default class extends React.Component<RouteComponentProps<any>, State> {
-
 
   state: State =
     {
@@ -84,7 +88,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         </Header>
         <Content>
           <Table
-            rowSelection={rowSelection}
+            // rowSelection={rowSelection}
+            bordered
             columns={this.columns}
             rowKey={(record) => { return record.id.toString() }}  //设置uniquekey
             dataSource={this.state.cuisineList}
@@ -98,21 +103,25 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   }
 
 
-  columns: ColumnProps<CuisineInfo>[] = [{
+  columns: ColumnProps<RestauCuiItem>[] = [{
+    title: '菜品ID',
+    dataIndex: 'id',
+    align: 'center',
+  }, {
     title: '菜品名称',
     dataIndex: 'c_name',
     align: 'center',
   }, {
     title: '标签',
     align: 'center',
-    dataIndex:'tag'
+    dataIndex: 'tag'
   }, {
     title: '价格',
     align: 'center',
     render: (text, record) => (
       <Col>{record.price}</Col>
     )
-  },  {
+  }, {
     title: '发布时间',
     align: 'center',
     render: (text, record) => (
@@ -120,11 +129,11 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     )
   }, {
     title: '操作',
-    key: 'id',
+    key: 'operation',
     align: 'center',
     render: (text, record) => (
       <Row type="flex" gutter={16} justify="center">
-        <Col ><a className='action-btn linkline' onClick={this.onEditCommodity.bind(this, 'view', record.id)}>查看</a></Col>
+        <Col ><a className='action-btn linkline' onClick={()=>this.view(record.id)}>查看</a></Col>
         <Col ><a className='action-btn linkline' onClick={this.onEditCommodity.bind(this, 'edit', record.id)}>编辑</a></Col>
         <Col ><a className='action-btn linkline' onClick={this.del.bind(this, [record.id] as number[])}>删除</a></Col>
       </Row>
@@ -151,28 +160,34 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
    * 重置搜索表单
    */
   reset() {
-    this.getData().then(() => {
+    this.getAllCuisine().then(() => {
       this.setState({
         isSearch: false,
-        searchContent:''
+        searchContent: ''
       })
       // console.log("search=======>",this.refs.mySearch)
       // this.refs.mySearch.input.input.value = '' //将搜索框置空
     })
   }
 
+  view(record:number){
+    let unmount = mount(
+        <CuisineInfoView id={record} />
+      )
+  } 
+
   /**
-   *删除商品控制函数 
+   *删除菜品控制函数 
    */
-  del(selectedRowKeys: number[]) {
+  del(id: number[]) {
     let that = this
     // console.log('skuIdsWeChoose:', selectedRowKeys)
     // console.log('commoditiesIds:', that.state.commodities.map((com) => { return com.id }))
     confirm({
-      title: '确定要删除这些商品？',
+      title: '确定要删除这个菜品吗？',
       onOk() {
-        that.deleteCommodity(selectedRowKeys).then(() => {
-          that.getData()
+        that.deleteCuisine(id).then(() => {
+          that.getAllCuisine()
         })
       },
       onCancel() { },
@@ -199,7 +214,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     /**
      * status实际上是Home Index中配置的id
     */
-     console.log(id)
+    console.log(id)
     this.props.history.push(`${this.props.match.url}/set/${status}/${id}`)
   }
 
@@ -207,31 +222,32 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   /**
      * 拉取全部商品数据
      */
-  async getData() {
-    try {
-      const result = await SkuApi.AdminSearchSkuInfo({
-        // token:token,
-        keyword: '',
-        pageIndex: 0,
-        pageSize: 0,
-        sort: 'ctime',
-        order: 'desc'
-      })
-      if (result.stat === 'ok') {
-        // this.setState({
-        //   commodities: result.items
-        // })
-        // console.log(result.items)
-      } else {
-        // console.log(result.stat)
-        throw result.stat
+  async getAllCuisine() {
+    const restaurantid = parseInt(localStorage.getItem('restauId'))
+    if (!restaurantid) {
+      message.error('请重新登录')
+    } else {
+      try {
+        const result = await CuisineService.RestaurGetMyCui({
+          restaurantID:restaurantid
+        })
+        // if (result.cuisine) {
+          this.setState({
+            cuisineList: result.cuisine
+          })
+          // console.log(result.items)
+        // } else {
+          // console.log(result.stat)
+          // throw result.stat
+        // }
+      } catch (error) {
+        Modal.error({
+          title: '提示',
+          content: error
+        })
       }
-    } catch (error) {
-      Modal.error({
-        title: '提示',
-        content: error
-      })
     }
+
   }
 
   /**
@@ -264,13 +280,13 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   /**
    * 删除商品
    */
-  async deleteCommodity(skuId: number[]) {
+  async deleteCuisine(cuiId: number[]) {
     try {
-      const result = await SkuApi.AdminDeleteSku({
+      const result = await CuisineService.RestauDelCuisine({
         // token:token,
-        skuIds: skuId
+        cuisineID: cuiId
       })
-      if (result.stat === 'ok') {
+      if (result.stat === '1') {
         // console.log("stat", result.stat)
       } else {
         throw result.stat
@@ -283,14 +299,15 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     }
   }
 
-  componentWillMount(){
-    let cuisinelistall = cuisines.map((item,i)=>{
-      return item
-    })
-    // console.log(orderlistall)
-    this.setState({
-      cuisineList:cuisinelistall
-    })
+  componentWillMount() {
+    // let cuisinelistall = cuisines.map((item,i)=>{
+    //   return item
+    // })
+    // // console.log(orderlistall)
+    // this.setState({
+    //   cuisineList:cuisinelistall
+    // })
+    this.getAllCuisine()
   }
 
   componentDidMount() {
@@ -302,7 +319,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
       type: 'SET_TITLE',
       title: '菜品设置'
     })
-     
+
     // this.getData()
   }
 }

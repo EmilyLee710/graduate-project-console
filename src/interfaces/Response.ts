@@ -104,7 +104,7 @@ export interface AdminGetAllUserResponse extends BaseResponse{
   * 餐厅登录
   */
  export interface RestauLoginResponse extends BaseResponse{
-    RestaurantID:string
+    RestaurantId:string
  }
 
  /**
@@ -134,3 +134,24 @@ export interface AdminAddRestaurantResponse extends BaseResponse{
 export interface AdminDelRestauResponse{
     
 }
+
+/**
+ * 餐厅浏览本餐厅菜品
+ */
+export interface RestaurGetMyCuiResponse{
+    cuisine:model.RestauCuiItem[]
+}
+
+/**
+ * 餐厅添加菜品
+ */
+export interface RestauAddCuisineResponse extends BaseResponse{
+    CuisineId:number
+}
+
+/**
+ * 餐厅查看菜品
+ */
+export interface RestauGetCuiInfoResponse{
+    cuisine:model.CuisineDetailInfo
+  }

@@ -72,7 +72,8 @@ export default class UserManagement extends React.Component<RouteComponentProps<
                 </Header>
                 <Content>
                     <Table
-                        rowSelection={rowSelection}
+                        // rowSelection={rowSelection}
+                        bordered
                         columns={this.columns}
                         rowKey={(record) => { return record.id.toString() }}  //设置uniquekey
                         dataSource={this.state.userList}
@@ -181,7 +182,7 @@ export default class UserManagement extends React.Component<RouteComponentProps<
                 this.setState({
                     userList: result.user
                   })
-                console.log(result.user)
+                // console.log(result.user)
             } else if(result.stat === '0'){
                 Modal.error({
                     title: '提示',

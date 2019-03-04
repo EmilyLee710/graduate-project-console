@@ -124,9 +124,9 @@ export default class extends React.Component<RouteComponentProps<any>> {
         let result = await authService.restauLogin(this.state.phone, this.state.pwd)
         // message.info(result.stat)
         if (result.stat === '1') {
-          localStorage.setItem('restauId', result.RestaurantID)
+          console.log(result)
+          localStorage.setItem('restauId', result.RestaurantId)
           localStorage.setItem('identity', '2')
-          // console.log(localStorage.getItem('token'))
           this.props.history.push('/home')
           message.success('登录成功')
         } else {

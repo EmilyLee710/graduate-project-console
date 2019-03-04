@@ -16,7 +16,7 @@ export default class extends React.Component {
           <Switch>
             <Redirect from="/" exact to="/login" />
             {identity === '1'?<Redirect from="/home" exact to="/home/usermanagement" />
-          : <Redirect from="/home" exact to="/home/comidity" />}
+          : <Redirect from="/home" exact to="/home/cuisine" />}
             <Route path="/login" component={LoginScreen} />
             <Route path="/home" component={HomeScreen} />
           </Switch>

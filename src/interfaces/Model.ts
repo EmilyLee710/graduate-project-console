@@ -393,8 +393,9 @@ export interface ConfigInfo{
    c_name:string,
    tag:string,
    price:number,
-   coverUrl:string,
-   detailUrls:string[]
+   origin_price:number,
+   cover_url:string,
+   detail_url:string
  }
 
  export interface RestauCuiItem{
@@ -421,4 +422,17 @@ export interface ConfigInfo{
    restaurantname:string,
    address:string,
    ctime:number
+ }
+
+ export interface CuisineDetailInfo {
+    id:number,
+    c_name:string,
+    price:number,
+    cover_url:string,
+    detail_url:string,
+    origin_price:number,
+    sell_num:number,
+    collect_num:number,
+    ctime:number,
+    tag:string
  }

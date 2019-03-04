@@ -7,10 +7,12 @@ import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 import './style.less'
 import { CuisineInfo } from '../../../interfaces/model'
 import * as SkuApi from '../../../services/SkuApi'
-import { AdminListSkuType } from '../../../services/OperationApi'
+import * as CuisineService from '../../../services/CuisineApi'
+// import { AdminListSkuType } from '../../../services/OperationApi'
 import cuisineList from '../CuisineList'
 import store from '../../../Store'
 import UploadImage from '../../../components/UploadImageForsku'
+import Cuisine from '..';
 
 const confirm = Modal.confirm;
 const { Header, Footer, Sider, Content } = Layout;
@@ -27,6 +29,7 @@ interface State {
   warningAlert: boolean
   tag: string
   price: string
+  origin_price: string
 }
 
 
@@ -35,16 +38,18 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   state: State = {
     status: '',
     cuisine: {
-      id: 0,
+      id: null,
       ctime: 0,
       c_name: '',
       tag: '',
-      price: 0,
-      coverUrl: '',
-      detailUrls: []
+      price: null,
+      origin_price: null,
+      cover_url: '',
+      detail_url: ''
     },
     cuisineName: '',
     price: '',
+    origin_price: '',
     tag: '',
     defaultCoverImgs: [],
     defaultDetailImgs: [],
@@ -58,7 +63,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   render() {
 
     /**
-     * 设置 commodity
+     * 设置 cuisine
      */
     const { cuisine } = this.state
     /**
@@ -83,7 +88,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
             <Input
               style={{ width: 200 }}
               value={cuisine.c_name}
-              onChange={(event) => { this.setValue('name', event.target.value.trim()) }}
+              onChange={(event) => { this.setValue('c_name', event.target.value.trim()) }}
               disabled={this.state.disabled} />
           </div>
           <div className='flex padding-top'>
@@ -107,23 +112,23 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
               <Input
                 style={{ width: 150 }}
                 addonAfter='元'
-                value={cuisine.price}
+                value={this.state.price}
                 onChange={(event) => { this.setValue('price', event.target.value.trim()) }}
                 disabled={this.state.disabled} />
             </div>
-            {/* <div className='flex margin-right'>
+            <div className='flex margin-right'>
               <div className='width-title'>
-                <label>原价:</label>      
-                // js转换成字符串有三种，如果直接用tostring万一为空就会报错
+                <label>原价:</label>
+                {/* // js转换成字符串有三种，如果直接用tostring万一为空就会报错 */}
                 {this.state.warningAlert ? <p className='warning'>*输入无效字符</p> : ''}
               </div>
               <Input
                 style={{ width: 150 }}
                 addonAfter='元'
-                value={this.state.original_price}
-                onChange={(event) => { this.setValue('original_price', event.target.value.trim()) }}
+                value={cuisine.origin_price}
+                onChange={(event) => { this.setValue('origin_price', event.target.value.trim()) }}
                 disabled={this.state.disabled} />
-            </div>  */}
+            </div>
             {/* <div className='flex'>
               <label className='width-title'>库存数:</label>
               <InputNumber
@@ -140,7 +145,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
             </label>
             <Input
               style={{ width: 150 }}
-              value={cuisine.tag} />
+              value={cuisine.tag}
+              onChange={(event) => { this.setValue('tag', event.target.value.trim()) }} />
             {/* <Select
               showArrow={true}
               mode="multiple"
@@ -186,6 +192,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
    */
   uploadChange_addDetail(value: any[]) {
     // this.state.commodity.details = value[0].
+    // console.log('detail',value)
     this.setState({
       defaultDetailImgs: value
     })
@@ -195,7 +202,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
    * 改变商品轮播图上传图片的绑定函数
    */
   uploadChange_addCovors(value: any[]) {
-    // console.log('Covors======================>', value)
+    // console.log('Covors===>', value[0].response)
     this.setState({
       defaultCoverImgs: value
     })
@@ -206,50 +213,31 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     // })
   }
 
-  /**
-   * 改变商品属性的函数
-   */
-
-  // updateAttributes(value:string[]){
-  //   this.state.commodity.attri=value
-  //   this.setState({
-  //     commodity:this.state.commodity
-  //   })
-  // }
-
   setValue(key: string, value: any) {
     switch (key) {
-      case 'name':
-        this.state.cuisine[key] = value
-        break
+      //   case 'c_name':
+      //     this.state.cuisine[key] = value
+      //     break
       case 'price':
+        // this.state.cuisine[key] = parseInt(value) * 100
         this.setState({
           price: value
         })
         break
-      case 'total_stock':
+      case 'origin_price':
+        this.setState({
+          price: value
+        })
+        break
+      //   case 'tag':
+      //     this.setState({
+      //       tag: value
+      //   })
+      //   break
+      default:
         this.state.cuisine[key] = value
         break
-      // case 'src_skuType':
-      //   // console.log(value)
-      //   if (value)
-      //     this.state.options.forEach((opt) => {
-      //       if (opt.name === value) this.state.commodity[key].push(opt)
-      //     })
-
-      //   // console.log('add', this.state.commodity["src_skuType"])
-      //   break
-      // case 'src_skuType_Remove':
-      //   let orgin = this.state.commodity["src_skuType"]
-      //   for (let i = 0, len = orgin.length; i < len; i++) {
-      //     if (orgin[i].name === value) {
-      //       this.state.commodity["src_skuType"].splice(i, 1)
-      //       break
-      //     }
-      //   }
-      //   break
     }
-
     this.setState({
       cuisine: this.state.cuisine
     })
@@ -258,18 +246,21 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   verifyDataForm() {
     // console.log('verifyDataForm')
     if (this.state.cuisine.c_name === '' ||
-      this.state.price === '' ||
-      this.state.tag === null) {
+      this.state.cuisine.tag === '' ||
+      this.state.cuisine.price === null ||
+      this.state.cuisine.origin_price === null) {
       Modal.error({
         title: '提示',
         content: "请完善商品信息"
       })
-    } else if (this.state.price !== null && !(/^([0]|[0-9])+(\.[0-9]{1,2})?$/.test(this.state.price))) {
-      Modal.error({
-        title: '提示',
-        content: '请检查输入价格是否有效！(价格最多保留两位小数)'
-      })
-    } else {
+    }
+    // else if (this.state.price !== null && !(/^([0]|[0-9])+(\.[0-9]{1,2})?$/.test(this.state.price))) {
+    //   Modal.error({
+    //     title: '提示',
+    //     content: '请检查输入价格是否有效！(价格最多保留两位小数)'
+    //   })
+    // } 
+    else {
       return true
     }
   }
@@ -279,17 +270,17 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     // console.log(`save`)
 
     var images: string[] = [];
-    this.state.defaultDetailImgs.forEach((x, i) => {
-      // console.log(`defaultCoverImgs${i}`,x)
-      if (x.status == 'done')
-        images.push(x.response ? x.response.url : x.url)
+    this.state.defaultDetailImgs.forEach((item, i) => {
+      // console.log(`defaultCoverImgs${i}`,item)
+      // if (item.status == 'done')
+      images.push(item.response)
     })
-    this.state.cuisine.detailUrls = images;
-
-    let x = this.state.defaultCoverImgs[0];
-    if (x.status == 'done')
-      this.state.cuisine.coverUrl = x.response ? x.response.url : x.url;
-
+    this.state.cuisine.detail_url = images[0];
+    // console.log('deimg',images[0])
+    let img = this.state.defaultCoverImgs[0];
+    if (img.status == 'done')
+      this.state.cuisine.cover_url = img.response;
+    // console.log('coimg',img.response)
     if (!this.verifyDataForm()) {
       return;
     }
@@ -298,11 +289,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
        * 修改商品信息,调用修改商品的接口
        */
 
-      this.setCommodity(this.state.cuisine).then(() => {
-        // let skuTypeIds = this.state.cuisine.src_skuType.map((val) => {
-        //   return val.id
-        // })
-        // console.log("skuTypeIds", skuTypeIds)
+      this.setCuisine(this.state.cuisine).then(() => {
         // console.log("this.state.commodity", this.state.commodity)
         this.props.history.goBack()
       })
@@ -315,7 +302,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
       this.setState({
         cuisine: this.state.cuisine
       })
-      this.addCommodity(this.state.cuisine).then(() => {
+      this.addCuisine().then(() => {
         this.props.history.goBack()
         // console.log('afterAdd', this.state.commodity)
       })
@@ -337,12 +324,14 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
           c_name: '',
           tag: '',
           price: null,
-          coverUrl: '',
-          detailUrls: []
+          origin_price: null,
+          cover_url: '',
+          detail_url: ''
         },
-        cuisineName:'',
-        tag:'',
-        price:''
+        cuisineName: '',
+        tag: '',
+        price: null,
+        origin_price: ''
       })
     }
   }
@@ -351,32 +340,35 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
    * 编辑商品信息的函数
    */
 
-  async setCommodity(preCommodity: CuisineInfo) {
+  async setCuisine(preCuisine: CuisineInfo) {
     try {
-      // let skuTypeIds = preCommodity.src_skuType.map((val) => {
-      //   return val.id
-      // })
-      // console.log('skuTypeIds', skuTypeIds)
       let price = parseFloat(this.state.price) * 100
-      // let original_price = parseFloat(this.state.original_price) * 100
-      // console.log('original_price', original_price)
-      // console.log('price', price)
-      const result = await SkuApi.AdminSetSku({
-        // token: token,
-        skuId: preCommodity.id,
-        name: preCommodity.c_name,
-        images: [],
-        details: '',
-        total_stock: 0,
-        price: price,
-        original_price: 0,
-        skuTypeIds: []
-      })
-      if (result.stat === 'ok') {
-        message.success('保存成功')
+      let origin_price = parseFloat(this.state.origin_price) * 100
+      if (this.state.cuisine.cover_url === '' || this.state.cuisine.detail_url === '') {
+        message.error('请上传图片')
+        return
       } else {
-        throw result.stat
+        console.log('cover', this.state.cuisine.cover_url)
+        console.log('detail', this.state.cuisine.detail_url)
+        let cover = `/imgs/${this.state.defaultCoverImgs[0].response}`
+        let detail = `/imgs/${this.state.defaultDetailImgs[0].response}`
+        const result = await CuisineService.RestauSetCuiInfo({
+          // token: token,
+          CuisineId:this.state.cuisine.id,
+          c_name:preCuisine.c_name,
+          cover_url:cover,
+          price:price,
+          origin_price:origin_price,
+          detail_url:detail,
+          tag:preCuisine.tag
+        })
+        if (result.stat === '1') {
+          message.success('保存成功')
+        } else {
+          throw result.stat
+        }
       }
+
     } catch (error) {
       message.error('保存失败')
       // console.log(error)
@@ -384,41 +376,43 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   }
 
   /**
-   * 增加商品信息的函数
+   * 增加菜品信息的函数
    */
-  async addCommodity(preCommodity: CuisineInfo) {
+  async addCuisine() {
     try {
-      // let skuTypeIds = preCommodity.src_skuType.map((val) => {
-      //   return val.id
-      // })
+      const restaurantid = parseInt(localStorage.getItem('restauId'))
       let price = parseFloat(this.state.price) * 100
-      // let original_price = parseFloat(this.state.original_price) * 100
-      // console.log('original_price', original_price)
-      // console.log('price', price)
-      // console.log('skuTypeIds', skuTypeIds)
-      const result = await SkuApi.AdminAddSku({
-        // token: token,
-        name: preCommodity.c_name,
-        images: [],
-        details: '',
-        total_stock: 0,
-        price: price,
-        original_price: 0,
-        skuTypeIds: []
-      })
-      if (result.stat === 'ok') {
-        // console.log(result.skuId)
-        message.success('添加成功')
-        // Modal.success({
-        //   title: '提示',
-        //   content: "添加成功"
-        // })
+      let origin_price = parseFloat(this.state.origin_price) * 100
+      console.log('cover', this.state.cuisine.cover_url)
+      console.log('detail', this.state.cuisine.detail_url)
+      if (this.state.cuisine.cover_url === '' || this.state.cuisine.detail_url === '') {
+        message.error('请上传图片')
+        return
       } else {
-        message.error('添加失败')
-        throw result.stat //手动抛出异常
+        let cover = `/imgs/${this.state.defaultCoverImgs[0].response}`
+        let detail = `/imgs/${this.state.defaultDetailImgs[0].response}`
+        const result = await CuisineService.RestauAddCuisine({
+          // token: token,
+          restau_id: restaurantid,
+          c_name: this.state.cuisine.c_name,
+          cover_url: cover,
+          detail_url: detail,
+          price: price,
+          origin_price: origin_price,
+          tag: this.state.tag
+        })
+        if (result.stat === '1') {
+          console.log(result.CuisineId)
+          message.success('添加成功')
+          // this.props.history.goBack()
+        } else {
+          message.error('添加失败')
+          throw result.stat //手动抛出异常
+        }
       }
-    } catch (error) {
-      message.error('添加失败')
+    }
+    catch (error) {
+      message.error('catch', error)
       // console.log(error)
     }
   }
@@ -426,45 +420,53 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   /**
    * 获取商品信息的函数
    */
-  async getCommodity(skuId: number) {
+  async getCuisine(cuiId: number) {
     try {
-      const result = await SkuApi.AdminGetSkuInfoSku({
+      const result = await CuisineService.RestauGetCuiInfo({
         // token: token,
-        skuId: skuId
+        CuisineId: cuiId
       })
-      if (result.stat === 'ok') {
-        let coverImgs = result.item.images.map((element, index) => {
-          return {
-            uid: index,
-            name: 'coverImgs',
-            size: 0,
-            type: 'image',
-            status: 'done',
-            url: element
-          }
-        })
-        let detailImgs = [{
-          uid: 0,
-          name: 'coverImgs',
-          size: 0,
-          type: 'image',
-          status: 'done',
-          url: result.item.details
-        }]
-        let price = (result.item.price / 100).toString()
-        let original_price = (result.item.original_price / 100).toString()
-        this.setState({
-          defaultCoverImgs: coverImgs,
-          defaultDetailImgs: detailImgs,
-          // commodity: result.item,
-          price: price,
-          // original_price: original_price
-        })
-        // console.log('AsnycaddCoverImgs', this.state.addCoverImgs)
-        // console.log('AsnyaddDetailImgs', this.state.addDetailImgs)
-      } else {
-        throw result.stat
+      // if (result.stat === 'ok') {
+      let info = {
+        id: result.cuisine.id,
+        ctime: result.cuisine.ctime,
+        c_name: result.cuisine.c_name,
+        tag: result.cuisine.tag,
+        price: result.cuisine.price,
+        origin_price: result.cuisine.origin_price,
+        cover_url: result.cuisine.cover_url,
+        detail_url: result.cuisine.detail_url
       }
+      let coverImgs = [{
+        uid: 0,
+        name: 'coverImgs',
+        size: 0,
+        type: 'image',
+        status: 'done',
+        url: result.cuisine.cover_url
+      }]
+      let detailImgs = [{
+        uid: 0,
+        name: 'coverImgs',
+        size: 0,
+        type: 'image',
+        status: 'done',
+        url: result.cuisine.detail_url
+      }]
+      let price = (result.cuisine.price / 100).toString()
+      let origin_price = (result.cuisine.origin_price / 100).toString()
+      this.setState({
+        defaultCoverImgs: coverImgs,
+        defaultDetailImgs: detailImgs,
+        // commodity: result.item,
+        price: price,
+        origin_price: origin_price
+      })
+      // console.log('AsnycaddCoverImgs', this.state.addCoverImgs)
+      // console.log('AsnyaddDetailImgs', this.state.addDetailImgs)
+      // } else {
+      //   throw result.stat
+      // }
     } catch (error) {
       Modal.error({
         title: '提示',
@@ -474,24 +476,24 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     }
   }
 
-  async listSkuType() {
-    try {
-      const result = await AdminListSkuType()
-      if (result.stat === 'ok') {
-        // this.setState({
-        //   options: result.items
-        // })
-      } else {
-        throw result.stat
-      }
-    } catch (error) {
-      Modal.error({
-        title: '提示',
-        content: error
-      })
-    }
-  }
-  
+  // async listSkuType() {
+  //   try {
+  //     const result = await AdminListSkuType()
+  //     if (result.stat === 'ok') {
+  //       // this.setState({
+  //       //   options: result.items
+  //       // })
+  //     } else {
+  //       throw result.stat
+  //     }
+  //   } catch (error) {
+  //     Modal.error({
+  //       title: '提示',
+  //       content: error
+  //     })
+  //   }
+  // }
+
   componentWillMount() {
 
     // console.log(this.props)
@@ -501,23 +503,24 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     // this.setState({
     //   status: status
     // })
-    
+
     if (status !== 'add') {
       //请求商品数据
       // this.getCommodity(id)
-      cuisineList.map((item, i) => {
-        console.log(item)
-        if (item.id === id) {
-          this.setState({
-            cuisine: item
-          })
-        }
-      })
-      if (status === 'view') {
-        this.setState({
-          disabled: true
-        })
-      }
+      this.getCuisine(id)
+      // cuisineList.map((item, i) => {
+      //   console.log(item)
+      //   if (item.id === id) {
+      //     this.setState({
+      //       cuisine: item
+      //     })
+      //   }
+      // })
+      // if (status === 'view') {
+      //   this.setState({
+      //     disabled: true
+      //   })
+      // }
     }
     // /**
     //  * 请求选项
