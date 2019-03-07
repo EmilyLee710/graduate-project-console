@@ -6,7 +6,7 @@ import { ColumnProps } from 'antd/lib/table'
 import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 //redux+store
 
-import * as SkuApi from '../../services/SkuApi'
+// import * as SkuApi from '../../services/SkuApi'
 import * as CuisineService from '../../services/CuisineApi'
 import CuisineInfoView from '../../components/CuisineInfoView'
 
@@ -119,7 +119,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     title: '价格',
     align: 'center',
     render: (text, record) => (
-      <Col>{record.price}</Col>
+      <Col>{record.price /100}</Col>
     )
   }, {
     title: '发布时间',
@@ -149,7 +149,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
    * 根据筛选的表单条件重新请求服务端数据列表
    */
   filter(value: any) {
-    this.searchData(value).then(() => {
+    this.searchCuisine(value).then(() => {
       this.setState({
         isSearch: true
       })
@@ -231,6 +231,10 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         const result = await CuisineService.RestaurGetMyCui({
           restaurantID:restaurantid
         })
+        console.log('getall',result)
+        // if(!result.cuisine){
+        //   throw '暂无菜品'
+        // }
         // if (result.cuisine) {
           this.setState({
             cuisineList: result.cuisine
@@ -253,16 +257,19 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   /**
    * 搜索商品
    */
-  async searchData(keyword: string) {
+  async searchCuisine(keyword: string) {
     try {
-      const result = await SkuApi.AdminSearchSkuInfo({
+      let restauId = parseInt(localStorage.getItem('restauId'))
+      const result = await CuisineService.RestauSearchCui({
         // token:token,
-        keyword: keyword
+        restaurantID:restauId,
+        c_name: keyword
       })
-      if (result.stat === 'ok') {
+      if (result.stat === '1') {
         //若为空，会自动显示暂无数据
         this.setState({
           // commodities: result.items,
+          cuisineList:result.cuisine,
           isSearch: true
         })
         // console.log(result.items)

@@ -10,7 +10,8 @@ import './style.less'
 import store from '../../Store'
 import Operation from 'antd/lib/transfer/operation';
 import * as OperationApi from '../../services/OperationApi'
-import EditableTagGroup from '../../components/EditTagGroup'
+// import EditableTagGroup from '../../components/EditTagGroup'
+import { HomeImagecommit, GetHomeImage } from '../../interfaces/Model'
 import UploadImage from '../../components/UploadImage'
 
 const confirm = Modal.confirm;
@@ -86,7 +87,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         size: 0,
         type: 'image',
         status: 'done',
-        url: ''}
+        url: ''
+      }
     ],
     imgUrl: [],
     positoins: [],
@@ -159,7 +161,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
               </div> */}
             </div>
           </div>
-          <div className='padding-top'>
+          {/* <div className='padding-top'>
             <div className='width-title'>商品分类:</div>
             <div className='flex padding-top'>
               <EditableTagGroup
@@ -168,8 +170,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
                 updateStateProp={this.updateSkuTags.bind(this)} />
 
             </div>
-          </div>
-          <div className='flex padding-top'>
+          </div> */}
+          {/* <div className='flex padding-top'>
             <div className='width-title'>统一运费:</div>
             <InputNumber
               style={{ width: 150 }}
@@ -177,17 +179,16 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
               value={ConfigInfo.freight_config}
               onChange={(value) => { this.setValue('freight_config', value) }}
               disabled={this.state.disabled} />
-            {/* <Button style={{ marginLeft: 10 }} type='primary' onClick={this.transferFee.bind(this)}>确定</Button> */}
-          </div>
-          <div className='flex padding-top'>
+            
+          </div> */}
+          {/* <div className='flex padding-top'>
             <div>售后退货信息:</div>
             <Input
               placeholder='请输入地址、电话、联系人'
               style={{ width: 500, marginLeft: 10 }}
               value={ConfigInfo.after_sale_address}
               onChange={(e: any) => { this.setValue('after_sale_address', e.target.value.trim()) }} />
-            {/* <Button style={{ marginLeft: 10 }} type='primary' onClick={this.aftersellAddress.bind(this)}>确定</Button> */}
-          </div>
+          </div> */}
           <div className='flex padding-top'>
             <Button type='primary' onClick={this.handleSubmit.bind(this)}>保存</Button>
           </div>
@@ -224,7 +225,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   }
 
   updateImgs(value: string[], position: number) {
-    console.log('value', value, 'position', position)
+    // console.log('value', value, 'position', position)
     if (value.length === 0) value.push('')
     this.state.addCoverImgs[position] = {
       uid: -1,
@@ -236,7 +237,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
       thumbUrl: value[0]
     }
 
-    console.log('cover:', this.state.addCoverImgs)
+    // console.log('cover:', this.state.addCoverImgs)
     // console.log('img',imgs)
     this.setState({
       addCoverImgs: this.state.addCoverImgs
@@ -275,8 +276,21 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     /**
      * 将数据保存至接口
      */
-    if (!this.verifyDataForm()) {
-      return;
+    // if (!this.verifyDataForm()) {
+    //   return;
+    // }
+    if (this.state.addCoverImgs.length > 0) {
+      let covers: HomeImagecommit[] = []
+      for (var index = 0; index < 3; index++) {
+        covers.push({
+          url: this.state.addCoverImgs[index].url,
+          index: index
+        })
+      }
+      console.log(covers)
+      this.addHomeImage(covers)
+    } else {
+      message.error('请上传图片')
     }
 
 
@@ -284,25 +298,23 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
      * 设置原始的orgin 使之与现在位置一一映射，
      * 若该position不存在origin则用填充
      */
-    let maxLen = this.state.addCoverImgs.length > this.state.defaultLen ? this.state.addCoverImgs.length : this.state.defaultLen
-    // console.log('this.state.addCoverImgs',this.state.addCoverImgs.length)
-    // console.log('defaultImgs.length',this.state.defaultLen)
-    // console.log('maxLen',maxLen)
-    var original = new Array
-    for (let i = 0; i < maxLen; i++) {
-      original.push({
-        id: -1,
-        url: ''
-      })
-    }
+    // let maxLen = this.state.addCoverImgs.length > this.state.defaultLen ? this.state.addCoverImgs.length : this.state.defaultLen
+
+    // var original = new Array
+    // for (let i = 0; i < maxLen; i++) {
+    //   original.push({
+    //     id: -1,
+    //     url: ''
+    //   })
+    // }
 
     // console.log('orginalBefore', original)
     // console.log('origin',this.state.origin)
-    this.state.origin.forEach((item, index) => {
-      // console.log(`第${index}次`,item)
-      original[item.postion - 1].id = item.id
-      original[item.postion - 1].url = item.image_url
-    })
+    // this.state.origin.forEach((item, index) => {
+    //   // console.log(`第${index}次`,item)
+    //   original[item.postion - 1].id = item.id
+    //   original[item.postion - 1].url = item.image_url
+    // })
     // console.log('origin', this.state.origin)
     // console.log('orginal', original)
     // console.log('addCoverImgs', this.state.addCoverImgs)
@@ -310,28 +322,28 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
      * 对应的改变规则（此时original与addcoverimgs存在一一对应的关系）
      */
 
-    original.map((val, index) => {
-      let tmp
-      if (index < this.state.addCoverImgs.length)
-        tmp = this.state.addCoverImgs[index]
-      else tmp = {
-        uid: -1,
-        name: 'ff',
-        size: 0,
-        type: 'image',
-        status: 'done',
-        url: ''
-      }
+    // original.map((val, index) => {
+    //   let tmp
+    //   if (index < this.state.addCoverImgs.length)
+    //     tmp = this.state.addCoverImgs[index]
+    //   else tmp = {
+    //     uid: -1,
+    //     name: 'ff',
+    //     size: 0,
+    //     type: 'image',
+    //     status: 'done',
+    //     url: ''
+    //   }
 
-      if (val.id !== -1) {
-        //对应位置position 原来有图片
-        if (tmp.url !== val.url && tmp.url !== '') this.setHomeImage(val.id, tmp.url)
-        // else if (tmp.url === '') this.deleteHomeImage(val.id)
-      }
-      else {
-        if (tmp.url !== '') this.addHomeImage(tmp.url, index + 1)
-      }
-    })
+    //   if (val.id !== -1) {
+    //     //对应位置position 原来有图片
+    //     if (tmp.url !== val.url && tmp.url !== '') this.setHomeImage(val.id, tmp.url)
+    //     // else if (tmp.url === '') this.deleteHomeImage(val.id)
+    //   }
+    //   else {
+    //     if (tmp.url !== '') this.addHomeImage(tmp.url, index + 1)
+    //   }
+    // })
 
     // original.map((val, index) => {
     // let tmp
@@ -371,49 +383,18 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     //     }
     //   }
     // })
-
-
-    let addNewTags: string[] = []
-    let deleteIds: number[] = []
     /**
      * 存储删除的tagIds,调用接口删除
      */
-    this.state.SkuTypeOrigin.map((skuType) => {
-      let flag = false
-      this.state.SkuTypeNames.map((name) => {
-        this.state.SkuTypeNames.map((name) => {
-          if (name === skuType.name) flag = true
-        })
-      })
-      if (!flag) {
-        deleteIds.push(skuType.id)
-      }
-    })
     /**
      * 存储要增加的tag，调用接口增加
      */
-    this.state.SkuTypeNames.map((Tag) => {
-      let flag = false
-      this.state.SkuTypeOrigin.map((skuType) => {
-        if (Tag === skuType.name) flag = true
-      })
-      if (!flag) {
-        addNewTags.push(Tag)
-      }
-    })
+
     // console.log('addNewTags', addNewTags, 'deleteIds', deleteIds)
     /**
      * 调用增加和删除的接口
      */
-    if (addNewTags) {
-      addNewTags.map((name) => {
-        // this.addSkuType(name)
-      })
-    }
 
-    if (deleteIds) {
-      // this.deletedSkuType(deleteIds)
-    }
     /**
      * 修改运费
      */
@@ -423,26 +404,27 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
      */
     // this.setGlobalAfterSalesAddress(this.state.ConfigInfo.after_sale_address)
 
-    if (isSubmit) {
-      message.success('保存成功')
-    } else {
-      message.error('保存失败')
-    }
+    // if (isSubmit) {
+    //   message.success('保存成功')
+    // } else {
+    //   message.error('保存失败')
+    // }
   }
 
   /**
    * 添加首页轮播图
    */
-  async addHomeImage(image_url: string, position: number) {
+  async addHomeImage(images: HomeImagecommit[]) {
     try {
-      const result = await OperationApi.AdminAddHomeImage({
+      const result = await OperationApi.AdminAddHomeImgs({
         // token: token,
-        image_url: image_url,
-        position: position
+        images: images
       })
-      if (result.stat !== 'ok') {
+      if (result.stat !== '1') {
         isSubmit = false
         throw result.stat
+      } else{
+        message.success('上传成功')
       }
     } catch (error) {
       Modal.error({
@@ -455,276 +437,275 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   /**
    * 获取首页轮播图
    */
-  // async getAllHomeImages() {
-  //   try {
-  //     const result = await OperationApi.AdminGetAllHomeImages()
-  //     if (result.stat === 'ok') {
-  //       // console.log('getimages', result.items)
-
-  //       if (result.items.length <= 0) {
-  //         this.setState({
-  //           addCoverImgs: [{
-  //             uid: -1,
-  //             name: 'ff',
-  //             size: 0,
-  //             type: 'image',
-  //             status: 'done',
-  //             url: '',
-  //             thumbUrl: ''
-  //           }
-  //           ],
-  //           defaultImgs: [{
-  //             uid: -1,
-  //             name: 'ff',
-  //             size: 0,
-  //             type: 'image',
-  //             status: 'done',
-  //             url: '',
-  //             thumbUrl: ''
-  //           }
-  //           ],
-  //           origin: []
-  //         })
-  //       } else {
-  //         //位置与图片相对应
-  //         let maxPos = result.items[result.items.length - 1].postion
-  //         // console.log('pos',maxPos)
-  //         let imgs = new Array
-  //         for (let i = 0; i < maxPos; i++) {
-  //           imgs.push({
-  //             uid: -1,
-  //             name: 'ff',
-  //             size: 0,
-  //             type: 'image',
-  //             status: 'done',
-  //             url: '',
-  //             thumbUrl: ''
-  //           })
-  //         }
-  //         // console.log('imgs',imgs)
-  //         result.items.map((element, index) => {
-  //           imgs[element.postion - 1].url = element.image_url
-  //           imgs[element.postion - 1].thumbUrl = element.image_url
-  //         })
-
-  //         this.setState({
-  //           posCount: maxPos,
-  //           origin: result.items,
-  //           addCoverImgs: imgs,
-  //           defaultImgs: imgs,
-  //           defaultLen: maxPos
-  //         })
-  //       }
-  //       // console.log('origin', this.state.origin)
-  //       // console.log('defaultImgs',this.state.defaultImgs)
-  //     }
-  //     else {
-  //       throw result.stat
-  //     }
-
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-  /**
-   * 删除首页轮播图的图片
-   */
-  // async deleteHomeImage(homeImageId: number) {
-  //   try {
-  //     const result = await OperationApi.AdminDeleteHomeImage({
-  //       // token: token,
-  //       homeImageId: homeImageId
-  //     })
-  //     if (result.stat !== 'ok') {
-  //       isSubmit = false
-  //       throw result.stat
-  //     }
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-
-
-  // /**
-  //  * 获取运费与售后地址信息
-  //  */
-  // async getFreightAndAfterSalesAddressConfig() {
-  //   try {
-  //     const result = await OperationApi.AdminGetFreightAndAfterSalesAddressConfig()
-  //     if (result.stat === 'ok') {
-  //       // console.log(typeof result.config.freight_config, result.config.freight_config)
-  //       let configs = result.config
-  //       let freight = result.config.freight_config / 100
-  //       configs.freight_config = freight
-  //       // console.log(configs)
-  //       this.setState({
-  //         ConfigInfo: configs
-  //       })
-  //     } else {
-  //       throw result.stat
-  //     }
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-
-  /**
-   * 添加商品分类
-   */
-  // async addSkuType(name: string) {
-  //   try {
-  //     const result = await OperationApi.AdminAddSkuType({
-  //       // token: token,
-  //       name: name
-  //     })
-  //     if (result.stat !== 'ok') {
-  //       isSubmit = false
-  //       throw result.stat
-  //     }
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-
-  /**
-   * 删除商品分类对象
-   */
-  // async deletedSkuType(skuTypeIds: number[]) {
-  //   try {
-  //     const result = await OperationApi.AdminDeletedSkuType({
-  //       // token: token,
-  //       skuTypeIds: skuTypeIds
-  //     })
-  //     if (result.stat !== 'ok') {
-  //       isSubmit = false
-  //       throw result.stat
-  //     }
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-
-  /**
-   * 枚举商品类型
-   */
-  // async listSkuType() {
-  //   try {
-  //     const result = await OperationApi.AdminListSkuType()
-  //     if (result.stat === 'ok') {
-  //       let names = result.items.map((val) => { return val.name })
-  //       this.setState({
-  //         SkuTypeNames: names,
-  //         SkuTypeOrigin: result.items
-  //       })
-  //     } else {
-  //       throw result.stat
-  //     }
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-
-  /**
-   * 设置全局的售后地址
-   */
-  // async setGlobalAfterSalesAddress(afterSale_address: string) {
-  //   try {
-  //     const result = await OperationApi.AdminSetGlobalAfterSalesAddress({
-  //       // token: token,
-  //       afterSale_address: afterSale_address
-  //     })
-  //     if (result.stat !== 'ok') {
-  //       isSubmit = false
-  //       throw result.stat
-  //     }
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-
-  /**
-   * 设置全局的运费
-   */
-  // async setGlobalFreight(freight: number) {
-  //   try {
-  //     const result = await OperationApi.AdminSetGlobalFreight({
-  //       // token: token,
-  //       freight: freight
-  //     })
-  //     if (result.stat !== 'ok') {
-  //       isSubmit = false
-  //       throw result.stat
-  //     }
-  //   } catch (error) {
-  //     Modal.error({
-  //       title: '提示',
-  //       content: error
-  //     })
-  //   }
-  // }
-
-  /**
-   * 修改首页轮播图的图片
-   */
-  async setHomeImage(homeImageId: number, image_url: string) {
+  async getAllHomeImages() {
     try {
-      const result = await OperationApi.AdminSetHomeImage({
-        // token: token,
-        homeImageId: homeImageId,
-        image_url: image_url
-      })
-      if (result.stat !== 'ok') {
-        isSubmit = false
-        throw result.stat
-      }
-    } catch (error) {
-      Modal.error({
-        title: '提示',
-        content: error
-      })
-    }
-  }
-
-  componentWillMount() {
-    /**
-     * 获取接口数据
-     */
-    // this.getAllHomeImages().then(() => {
-    //   // console.log('addCoverImgs', this.state.addCoverImgs)
-    // })
-    // this.getFreightAndAfterSalesAddressConfig()
-    // this.listSkuType()
-  }
-
-  componentDidMount() {
-    store.dispatch({
-      type: 'SET_MENU',
-      menu: 'operation'
+      const result = await OperationApi.GetHomeSwipers()
+      // if (result.stat === 'ok') {
+      // console.log('getimages', result.items)
+      console.log('result',result.swiper)
+      // if (result.swiper.length <= 0) {
+      //   this.setState({
+      //     addCoverImgs: [{
+      //       uid: -1,
+      //       name: 'ff',
+      //       size: 0,
+      //       type: 'image',
+      //       status: 'done',
+      //       url: '',
+      //       thumbUrl: ''
+      //     }
+      //     ],
+      //     defaultImgs: [{
+      //       uid: -1,
+      //       name: 'ff',
+      //       size: 0,
+      //       type: 'image',
+      //       status: 'done',
+      //       url: '',
+      //       thumbUrl: ''
+      //     }
+      //     ],
+      //     origin: []
+      //   })
+      // } else {
+      //   //位置与图片相对应
+      //   // let maxPos = result.swiper[result.items.length - 1].postion
+      //   // console.log('pos',maxPos)
+      //   let imgs = new Array
+      //   for (let i = 0; i < 3; i++) {
+      //     imgs.push({
+      //       uid: -1,
+      //       name: 'ff',
+      //       size: 0,
+      //       type: 'image',
+      //       status: 'done',
+      //       url: '',
+      //       thumbUrl: ''
+      //     })
+      //   }
+       
+      //   result.swiper.map((item, index) => {
+      //     imgs[item.index].url = item.url
+      //     imgs[item.index].thumbUrl = item.url
+      //   })
+      //   console.log('imgs',imgs)
+      //   this.setState({
+      //     // posCount: maxPos,
+      //     // origin: result.items,
+      //     addCoverImgs: imgs,
+      //     defaultImgs: imgs,
+      //     // defaultLen: maxPos
+      //   })
+      // }
+      // // console.log('origin', this.state.origin)
+      // // console.log('defaultImgs',this.state.defaultImgs)
+    
+      // // else {
+      // //   throw result.stat
+      // // }
+    } catch(error) {
+    Modal.error({
+      title: '提示',
+      content: error
     })
-    store.dispatch({
-      type: 'SET_TITLE',
-      title: '运营管理'
-    })
   }
+}
+/**
+ * 删除首页轮播图的图片
+ */
+// async deleteHomeImage(homeImageId: number) {
+//   try {
+//     const result = await OperationApi.AdminDeleteHomeImage({
+//       // token: token,
+//       homeImageId: homeImageId
+//     })
+//     if (result.stat !== 'ok') {
+//       isSubmit = false
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+
+// /**
+//  * 获取运费与售后地址信息
+//  */
+// async getFreightAndAfterSalesAddressConfig() {
+//   try {
+//     const result = await OperationApi.AdminGetFreightAndAfterSalesAddressConfig()
+//     if (result.stat === 'ok') {
+//       // console.log(typeof result.config.freight_config, result.config.freight_config)
+//       let configs = result.config
+//       let freight = result.config.freight_config / 100
+//       configs.freight_config = freight
+//       // console.log(configs)
+//       this.setState({
+//         ConfigInfo: configs
+//       })
+//     } else {
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+/**
+ * 添加商品分类
+ */
+// async addSkuType(name: string) {
+//   try {
+//     const result = await OperationApi.AdminAddSkuType({
+//       // token: token,
+//       name: name
+//     })
+//     if (result.stat !== 'ok') {
+//       isSubmit = false
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+/**
+ * 删除商品分类对象
+ */
+// async deletedSkuType(skuTypeIds: number[]) {
+//   try {
+//     const result = await OperationApi.AdminDeletedSkuType({
+//       // token: token,
+//       skuTypeIds: skuTypeIds
+//     })
+//     if (result.stat !== 'ok') {
+//       isSubmit = false
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+/**
+ * 枚举商品类型
+ */
+// async listSkuType() {
+//   try {
+//     const result = await OperationApi.AdminListSkuType()
+//     if (result.stat === 'ok') {
+//       let names = result.items.map((val) => { return val.name })
+//       this.setState({
+//         SkuTypeNames: names,
+//         SkuTypeOrigin: result.items
+//       })
+//     } else {
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+/**
+ * 设置全局的售后地址
+ */
+// async setGlobalAfterSalesAddress(afterSale_address: string) {
+//   try {
+//     const result = await OperationApi.AdminSetGlobalAfterSalesAddress({
+//       // token: token,
+//       afterSale_address: afterSale_address
+//     })
+//     if (result.stat !== 'ok') {
+//       isSubmit = false
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+/**
+ * 设置全局的运费
+ */
+// async setGlobalFreight(freight: number) {
+//   try {
+//     const result = await OperationApi.AdminSetGlobalFreight({
+//       // token: token,
+//       freight: freight
+//     })
+//     if (result.stat !== 'ok') {
+//       isSubmit = false
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+/**
+ * 修改首页轮播图的图片
+ */
+// async setHomeImage(homeImageId: number, image_url: string) {
+//   try {
+//     const result = await OperationApi.AdminSetHomeImage({
+//       // token: token,
+//       homeImageId: homeImageId,
+//       image_url: image_url
+//     })
+//     if (result.stat !== 'ok') {
+//       isSubmit = false
+//       throw result.stat
+//     }
+//   } catch (error) {
+//     Modal.error({
+//       title: '提示',
+//       content: error
+//     })
+//   }
+// }
+
+componentWillMount() {
+  /**
+   * 获取接口数据
+   */
+  this.getAllHomeImages().then(() => {
+    console.log('addCoverImgs', this.state.addCoverImgs)
+  })
+  // this.getFreightAndAfterSalesAddressConfig()
+  // this.listSkuType()
+}
+
+componentDidMount() {
+  store.dispatch({
+    type: 'SET_MENU',
+    menu: 'operation'
+  })
+  store.dispatch({
+    type: 'SET_TITLE',
+    title: '运营管理'
+  })
+}
 }

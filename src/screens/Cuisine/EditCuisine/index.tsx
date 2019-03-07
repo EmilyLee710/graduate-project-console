@@ -6,7 +6,7 @@ import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 
 import './style.less'
 import { CuisineInfo } from '../../../interfaces/model'
-import * as SkuApi from '../../../services/SkuApi'
+// import * as SkuApi from '../../../services/SkuApi'
 import * as CuisineService from '../../../services/CuisineApi'
 // import { AdminListSkuType } from '../../../services/OperationApi'
 import cuisineList from '../CuisineList'
@@ -125,7 +125,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
               <Input
                 style={{ width: 150 }}
                 addonAfter='元'
-                value={cuisine.origin_price}
+                value={this.state.origin_price}
                 onChange={(event) => { this.setValue('origin_price', event.target.value.trim()) }}
                 disabled={this.state.disabled} />
             </div>
@@ -226,7 +226,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         break
       case 'origin_price':
         this.setState({
-          price: value
+          origin_price: value
         })
         break
       //   case 'tag':
@@ -247,8 +247,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     // console.log('verifyDataForm')
     if (this.state.cuisine.c_name === '' ||
       this.state.cuisine.tag === '' ||
-      this.state.cuisine.price === null ||
-      this.state.cuisine.origin_price === null) {
+      this.state.price === null ||
+      this.state.origin_price === null) {
       Modal.error({
         title: '提示',
         content: "请完善商品信息"
@@ -268,45 +268,52 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   save() {
 
     // console.log(`save`)
-
-    var images: string[] = [];
-    this.state.defaultDetailImgs.forEach((item, i) => {
-      // console.log(`defaultCoverImgs${i}`,item)
-      // if (item.status == 'done')
-      images.push(item.response)
-    })
-    this.state.cuisine.detail_url = images[0];
-    // console.log('deimg',images[0])
-    let img = this.state.defaultCoverImgs[0];
-    if (img.status == 'done')
+    // console.log(this.state.defaultDetailImgs,this.state.defaultCoverImgs)
+    console.log('tag',this.state.cuisine.tag)
+    if (this.state.defaultDetailImgs.length >0 && this.state.defaultCoverImgs.length>0) {
+      var images: string[] = [];
+      this.state.defaultDetailImgs.forEach((item, i) => {
+        // console.log(`defaultCoverImgs${i}`,item)
+        // if (item.status == 'done')
+        images.push(item.response)
+      })
+      this.state.cuisine.detail_url = images[0];
+      // console.log('deimg',images[0])
+      let img = this.state.defaultCoverImgs[0];
+      // if (img.status == 'done')
       this.state.cuisine.cover_url = img.response;
-    // console.log('coimg',img.response)
-    if (!this.verifyDataForm()) {
-      return;
-    }
-    if (this.state.status === 'edit') {
-      /**
-       * 修改商品信息,调用修改商品的接口
-       */
+      // console.log('coimg',img.response)
+      if (!this.verifyDataForm()) {
+        return;
+      }
+      if (this.state.status === 'edit') {
+        /**
+         * 修改商品信息,调用修改商品的接口
+         */
 
-      this.setCuisine(this.state.cuisine).then(() => {
-        // console.log("this.state.commodity", this.state.commodity)
-        this.props.history.goBack()
-      })
+        this.setCuisine(this.state.cuisine).then(() => {
+          // console.log("this.state.commodity", this.state.commodity)
+          this.props.history.goBack()
+        })
 
-      // console.log(`modify`)
+        // console.log(`modify`)
+      } else {
+        /**
+         * 增加一个商品，调用增加商品的接口
+         */
+        this.setState({
+          cuisine: this.state.cuisine
+        })
+        this.addCuisine().then(() => {
+          this.props.history.goBack()
+          // console.log('afterAdd', this.state.commodity)
+        })
+      }
     } else {
-      /**
-       * 增加一个商品，调用增加商品的接口
-       */
-      this.setState({
-        cuisine: this.state.cuisine
-      })
-      this.addCuisine().then(() => {
-        this.props.history.goBack()
-        // console.log('afterAdd', this.state.commodity)
-      })
+      message.error('请上传图片')
+      return
     }
+
   }
 
   cancel() {
@@ -354,13 +361,13 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         let detail = `/imgs/${this.state.defaultDetailImgs[0].response}`
         const result = await CuisineService.RestauSetCuiInfo({
           // token: token,
-          CuisineId:this.state.cuisine.id,
-          c_name:preCuisine.c_name,
-          cover_url:cover,
-          price:price,
-          origin_price:origin_price,
-          detail_url:detail,
-          tag:preCuisine.tag
+          CuisineId: this.state.cuisine.id,
+          c_name: preCuisine.c_name,
+          cover_url: cover,
+          price: price,
+          origin_price: origin_price,
+          detail_url: detail,
+          tag: preCuisine.tag
         })
         if (result.stat === '1') {
           message.success('保存成功')
@@ -399,8 +406,9 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
           detail_url: detail,
           price: price,
           origin_price: origin_price,
-          tag: this.state.tag
+          tag: this.state.cuisine.tag
         })
+        console.log('addstat',result.stat)
         if (result.stat === '1') {
           console.log(result.CuisineId)
           message.success('添加成功')
@@ -459,6 +467,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         defaultCoverImgs: coverImgs,
         defaultDetailImgs: detailImgs,
         // commodity: result.item,
+        cuisine: info,
         price: price,
         origin_price: origin_price
       })

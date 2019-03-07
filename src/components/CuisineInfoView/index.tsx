@@ -78,11 +78,13 @@ export default class extends React.Component<Props, State>{
     async getCuisineInfo() {
         const id = this.props.id
         // const token = localStorage.getItem('token')
+        console.log('cuisineid',id)
         try {
             let result = await CuisineService.RestauGetCuiInfo({
                 // token: token,
                 CuisineId: id
             })
+            console.log('result',result)
             // if (result.stat === 'ok') {
             //     // console.log(result.item)
             //     // this.setState({
@@ -91,9 +93,9 @@ export default class extends React.Component<Props, State>{
             // } else {
             //     throw result.stat
             // }
-            this.setState({
-                cuisineInfo:result.cuisine
-            })
+            // this.setState({
+            //     cuisineInfo:result.cuisine
+            // })
 
         } catch (error) {
             message.error(error)

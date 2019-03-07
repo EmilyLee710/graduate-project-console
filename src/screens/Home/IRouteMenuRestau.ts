@@ -37,7 +37,7 @@ const routeMenu: RouteMenuList[] = [{
   children:[],
   listRoute:[]
 }, {
-  key: 'operation',
+  key: 'restausetting',
   title:'餐厅设置',
   icon:'setting',
   status:true,

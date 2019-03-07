@@ -10,7 +10,7 @@ import './style.less'
 
 import store from '../../Store'
 import mount from 'mount-react'
-import AdminInfoView from '../../components/AdminInfoView'
+// import AdminInfoView from '../../components/AdminInfoView'
 
 import adminList from './AdminList'
 
@@ -117,9 +117,9 @@ export default class UserManagement extends React.Component<RouteComponentProps<
     }
 
     view(record: number) {
-        let unmount = mount(
-          <AdminInfoView id={record} />
-        )
+        // let unmount = mount(
+        //   <AdminInfoView id={record} />
+        // )
       }
 
     delres(){

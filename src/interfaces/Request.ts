@@ -1,4 +1,5 @@
-import { } from './Model'
+import { HomeImagecommit } from './Model'
+import { type } from 'os';
 
 // export interface BaseRequest{
 //   token:string
@@ -332,4 +333,84 @@ export interface RestauSetCuiInfoRequest{
 
 export interface RestauDelCuisineRequest{
   cuisineID:number[]
+}
+
+/**
+ * 餐厅搜索菜品
+ */
+export interface RestauSearchCuiRequest{
+  restaurantID:number,
+  c_name:string
+}
+
+/**
+ * 餐厅设置信息
+ */
+export interface RestauSetInfoRequest{
+  restaurantID:number,
+  cover_url:string,
+  restaurantname:string,
+  phone:string,
+  address:string,
+  license:string,
+  passwd:string,
+  description:string,
+  sale_info:string
+}
+
+/**
+ * 餐厅获取本餐厅信息
+ */
+export interface RestauGetMyInfoRequest{
+  restaurantId:number
+}
+
+/**
+ * 管理员添加首页轮播图
+ */
+export interface AdminAddHomeImgsRequest{
+  images:HomeImagecommit[]
+}
+
+/**
+ * 获取首页轮播图
+ */
+export interface GetHomeSwipersRequest{
+
+}
+
+/**
+ * 餐厅浏览订单
+ */
+export interface RestauGetAllOrderRequest{
+  restau_id:number,
+  type:number
+}
+
+/**
+ * 餐厅接单
+ */
+export interface RestauReceiveOrderRequest{
+  id:number
+}
+
+/**
+ * 餐厅拒绝接单
+ */
+export interface RestauRefuseOrderRequest{
+  id:number
+}
+
+/**
+ * 餐厅完成订单
+ */
+export interface RestauSetOrderFinishedRequest{
+  id:number
+}
+
+/**
+ * 餐厅浏览单个订单
+ */
+export interface RestauGetOrderInfoRequest{
+  id:number
 }

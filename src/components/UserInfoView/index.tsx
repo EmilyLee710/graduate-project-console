@@ -7,7 +7,7 @@ import { ColumnProps } from 'antd/lib/table'
 import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 
 import userList from '../../screens/UserManagement/UserList'
-import * as OrderService from '../../services/OrderApi'
+// import * as OrderService from '../../services/OrderApi'
 import checkService from '../../services/Checked'
 
 import './style.less'
@@ -27,10 +27,9 @@ export default class extends React.Component<Props, State>{
         userInfo: {
             id: null,
             ctime: 0,
-            name: '',
-            passwd: '',
+            username: '',
             phone: '',
-            sex: '',
+            sex: null,
             address: ''
         }
     }
@@ -48,8 +47,8 @@ export default class extends React.Component<Props, State>{
             >
 
                 <div className='content'>
-                    <p>用户昵称：{this.state.userInfo.name}</p>
-                    <p>用户密码:{this.state.userInfo.passwd}</p>
+                    <p>用户昵称：{this.state.userInfo.username}</p>
+                    {/* <p>用户密码:{this.state.userInfo.passwd}</p> */}
                     <p>手机号：{this.state.userInfo.phone}</p>
                     <p>性别：{this.state.userInfo.sex}</p>
                     <p>地址：{this.state.userInfo.address}</p>      
@@ -70,27 +69,27 @@ export default class extends React.Component<Props, State>{
         // console.log(key);
     }
 
-    async getOrderInfo() {
-        const id = this.props.id
-        const token = localStorage.getItem('token')
-        try {
-            let result = await OrderService.AdminOrderInfo({
-                // token: token,
-                orderId: id
-            })
-            if (result.stat === 'ok') {
-                // console.log(result.item)
-                // this.setState({
-                //     orderInfo: result.item
-                // })
-            } else {
-                throw result.stat
-            }
-        } catch (error) {
-            message.error(error)
-            // console.log(error)
-        }
-    }
+    // async getOrderInfo() {
+    //     const id = this.props.id
+    //     const token = localStorage.getItem('token')
+    //     try {
+    //         let result = await OrderService.AdminOrderInfo({
+    //             // token: token,
+    //             orderId: id
+    //         })
+    //         if (result.stat === 'ok') {
+    //             // console.log(result.item)
+    //             // this.setState({
+    //             //     orderInfo: result.item
+    //             // })
+    //         } else {
+    //             throw result.stat
+    //         }
+    //     } catch (error) {
+    //         message.error(error)
+    //         // console.log(error)
+    //     }
+    // }
 
     componentWillMount() {
         // this.getOrderInfo()

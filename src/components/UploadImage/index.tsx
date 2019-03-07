@@ -65,12 +65,12 @@ export default class extends React.Component<Props,State>{
           uploader.fileList.map((item: any) => {
             if (item.status === 'done') {
               if (item.response)
-                images.push(`/img/${item.response}`)//上传照片
+                images.push(`/imgs/${item.response}`)//上传照片
               // else
               //   images.push(item.url)//删除照片
             }
           })
-          console.log('response',uploader.fileList)
+          // console.log('response',uploader.fileList)
           this.props.updateStateProp(images,this.props.position)
         }   
       }

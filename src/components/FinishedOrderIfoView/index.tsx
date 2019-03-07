@@ -18,21 +18,23 @@ interface Props {
 
 interface State {
     visible: boolean
-    orderInfo: model.OrderInfo
+    orderInfo: model.OrderListItem
 }
 
 export default class extends React.Component<Props, State>{
     state: State = {
         visible: true,
         orderInfo: {
-            id: 0,
-            cuisinelist: [],
-            orderId: '',
-            ctime: 0,
-            pay_price: 0,
-            buyer: '',
-            buyerphone: '',
-            status: 0
+            id: null,
+            ctime: null,
+            comment: '',
+            tot_price: null,
+            user_id: null,
+            user_name: '',
+            phone:'',
+            cuisine_id:[],
+            order_status: null,
+            appoint_time: null
         }
     }
 
@@ -40,7 +42,7 @@ export default class extends React.Component<Props, State>{
         const Panel = Collapse.Panel;
         return (
             <Modal
-                title='订单状态：待接单'
+                title='订单状态：已完成'
                 maskClosable={false}
                 visible={this.state.visible}
                 onOk={this.close.bind(this)}
@@ -48,17 +50,17 @@ export default class extends React.Component<Props, State>{
                 destroyOnClose={true}
             >
                 <Collapse defaultActiveKey={['skuitem']} onChange={this.callback}>
-                    <Panel header='菜品信息' key='skuitem'>
+                <Panel header='菜品信息' key='skuitem'>
                         <Row type="flex" gutter={16} justify="space-around" style={{ textAlign: 'center' }}>
                             <Col span={8}>商品名</Col>
                             <Col span={8}>商品数量</Col>
-                            <Col span={8}>单价</Col>
+                            <Col span={8}>商品ID</Col>
                         </Row>
-                        {this.state.orderInfo.cuisinelist.map((item, i) => {
+                        {this.state.orderInfo.cuisine_id.map((item, i) => {
                             return <Row key={i} type="flex" gutter={16} justify="space-around" style={{ textAlign: 'center' }}>
                                 <Col span={8}>{item.name}</Col>
-                                <Col span={8}>{item.number}</Col>
-                                <Col span={8}>{item.sumprice}</Col>
+                                <Col span={8}>{item.num}</Col>
+                                <Col span={8}>{item.id}</Col>
                             </Row>
                         })}
                     </Panel>
@@ -71,10 +73,14 @@ export default class extends React.Component<Props, State>{
                     </Panel> */}
                     <Panel header='订单信息' key='orderinfo'>
                         <div className='content'>
-                            <p>买家：{this.state.orderInfo.buyer}</p>
-                            <p>手机号：{this.state.orderInfo.buyerphone}</p>
-                            <p>订单编号：{this.state.orderInfo.orderId}</p>
+                            <p>买家：{this.state.orderInfo.user_name}</p>
+                            <p>手机号：{this.state.orderInfo.phone}</p>
+                            <p>订单编号：{this.state.orderInfo.id}</p>
+                            <p>订单状态：{checkService.checkOrderStatus(this.state.orderInfo.order_status)}</p>
+                            <p>总金额：{this.state.orderInfo.tot_price / 100}</p>
                             <p>下单时间：{checkService.timestampToDate(this.state.orderInfo.ctime)}</p>
+                            <p>预约时间：{checkService.timestampToDate(this.state.orderInfo.appoint_time)}</p>
+                            <p>备注：{this.state.orderInfo.comment}</p>
                         </div>
                     </Panel>
                 </Collapse>
@@ -94,19 +100,19 @@ export default class extends React.Component<Props, State>{
 
     async getOrderInfo() {
         const id = this.props.id
-        const token = localStorage.getItem('token')
+        // const token = localStorage.getItem('token')
         try {
-            let result = await OrderService.AdminOrderInfo({
+            let result = await OrderService.RestauGetOrderInfo({
                 // token: token,
-                orderId: id
+                id: id
             })
-            if (result.stat === 'ok') {
-                // this.setState({
-                //     orderInfo: result.item
-                // })
-            } else {
-                throw result.stat
-            }
+            // if (result.stat === 'ok') {
+            this.setState({
+                orderInfo: result.order
+            })
+            // } else {
+            //     throw result.stat
+            // }
         } catch (error) {
             message.error(error)
             // console.log(error)
@@ -114,14 +120,14 @@ export default class extends React.Component<Props, State>{
     }
 
     componentWillMount() {
-        // this.getOrderInfo()
-        const id = this.props.id
-        orderList.map((item,i)=>{
-            if(item.id === id){
-                this.setState({
-                    orderInfo:item
-                })
-            }
-        })
+        this.getOrderInfo()
+        // const id = this.props.id
+        // orderList.map((item,i)=>{
+        //     if(item.id === id){
+        //         this.setState({
+        //             orderInfo:item
+        //         })
+        //     }
+        // })
     }
 }

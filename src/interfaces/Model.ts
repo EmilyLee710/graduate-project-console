@@ -436,3 +436,44 @@ export interface ConfigInfo{
     ctime:number,
     tag:string
  }
+
+ export interface RestauSetting{
+  restaurantID:number,
+  cover_url:string,
+  restaurantname:string,
+  phone:string,
+  address:string,
+  license:string,
+  passwd:string,
+  description:string,
+  sale_info:string
+ }
+
+ export interface HomeImagecommit{
+   url:string,
+   index:number
+ }
+
+ export interface GetHomeImage{
+   id:number,
+   url:string,
+   index:number
+ }
+
+ export interface OrderListItem{
+    id:number,
+    ctime:number,
+    comment:string,
+    tot_price:number,
+    user_id:number,
+    user_name:string,
+    phone:string
+    cuisine_id:{
+     id:number,
+     name:string,
+     num:number,
+     cover_url:string
+   }[],
+   order_status:number,
+   appoint_time:number
+ }

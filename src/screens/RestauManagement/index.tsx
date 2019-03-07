@@ -13,7 +13,7 @@ import mount from 'mount-react'
 import store from '../../Store'
 import UploadImage from '../../components/UploadImage'
 import RestauInfoView from '../../components/RestauInfoView'
-import restauList from './RestauList'
+// import restauList from './RestauList'
 
 import CheckService from '../../services/Checked'
 import * as RestaurantService from '../../services/RestauManageApi'

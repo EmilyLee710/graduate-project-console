@@ -6,7 +6,7 @@ import { ColumnProps } from 'antd/lib/table'
 
 import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 
-import restauList from '../../screens/RestauManagement/RestauList'
+// import restauList from '../../screens/RestauManagement/RestauList'
 import checkService from '../../services/Checked'
 // import * as OrderService from '../../services/OrderApi'
 import * as RestaurantService from '../../services/RestauManageApi'

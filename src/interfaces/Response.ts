@@ -155,3 +155,38 @@ export interface RestauAddCuisineResponse extends BaseResponse{
 export interface RestauGetCuiInfoResponse{
     cuisine:model.CuisineDetailInfo
   }
+
+/**
+ * 餐厅搜索菜品
+ */
+export interface RestauSearchCuiResponse extends BaseResponse{
+    cuisine:model.RestauCuiItem[]
+}
+
+/**
+ * 餐厅获取本餐厅信息
+ */
+export interface RestauGetMyInfoResponse{
+    restaurant:model.RestauSetting
+} 
+
+/**
+ * 获取首页轮播图
+ */
+export interface GetHomeSwipersResponse{
+    swiper:model.GetHomeImage[]
+}
+
+/**
+ * 餐厅浏览订单
+ */
+export interface RestauGetAllOrderResponse{
+    order:model.OrderListItem[]
+}
+
+/**
+ * 餐厅浏览单个订单
+ */
+export interface RestauGetOrderInfoResponse{
+    order:model.OrderListItem
+  }

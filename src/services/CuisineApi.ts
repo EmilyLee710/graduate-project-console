@@ -6,7 +6,8 @@ import
     RestauAddCuisineRequest,
     RestauGetCuiInfoRequest,
     RestauSetCuiInfoRequest,
-    RestauDelCuisineRequest
+    RestauDelCuisineRequest,
+    RestauSearchCuiRequest
 } from '../interfaces/Request'
 
 import 
@@ -14,7 +15,8 @@ import
   RestaurGetMyCuiResponse,
   RestauAddCuisineResponse,
   RestauGetCuiInfoResponse,
-  BaseResponse
+  BaseResponse,
+  RestauSearchCuiResponse
 } from '../interfaces/Response'
 
 export function RestaurGetMyCui(opt:RestaurGetMyCuiRequest){
@@ -43,6 +45,12 @@ export function RestaurGetMyCui(opt:RestaurGetMyCuiRequest){
 
  export function RestauDelCuisine(opt:RestauDelCuisineRequest){
     return httpService.post<BaseResponse,RestauDelCuisineRequest>('/api/RestauDelCuisine',
+        opt
+    )
+ }
+
+ export function RestauSearchCui(opt:RestauSearchCuiRequest){
+    return httpService.post<RestauSearchCuiResponse,RestauSearchCuiRequest>('/api/RestauSearchCui',
         opt
     )
  }

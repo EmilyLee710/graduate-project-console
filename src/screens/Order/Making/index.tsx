@@ -16,7 +16,7 @@ import checkService from '../../../services/Checked'
 import * as OrderService from '../../../services/OrderApi'
 
 interface State {
-  orderList: model.OrderInfo[]
+  orderList: model.OrderListItem[]
   isSearch: boolean
   searchContent: string
   pageSize: number
@@ -39,64 +39,67 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     total: 0
   }
 
-  colums: ColumnProps<model.OrderInfo>[] = [{
-    title: '菜品列表',
+  colums: ColumnProps<model.OrderListItem>[] = [{
+    title: '菜品清单',
     render: (record) => (
-      <div>{record.cuisinelist[0].name}</div>
+      // <div>{record.cuisinelist[0].name}</div>
+      record.cuisine_id.map((item: any, index: any) => {
+        return (
+          <p key={index}>{item.name} 数量：{item.num}</p>
+        )
+      })
     ),
     key: 'cuisinelist',
     align: 'center',
-    width: '14.28%'
-  }, {
+    width: '30%'
+  },
+  {
     title: '订单编号',
-    dataIndex: 'orderId',
+    dataIndex: 'id',
     key: 'orderId',
     align: 'center',
-    width: '14.28%'
-  }, {
+    width: '10%'
+  }, 
+  {
     title: '订单时间',
     render: (text, record) => (
       <p>{checkService.timestampToDate(record.ctime)}</p>
     ),
     key: 'ctime',
     align: 'center',
-    width: '14.28%'
-  }, {
+    width: '10%'
+  }, 
+  {
     title: '订单金额',
-    dataIndex: 'pay_price',
+    dataIndex: 'tot_price',
     render: (text, record) => (
-      <p>{text}</p>
+      <p>{text/100}</p>
     ),
-    key: 'pay_price',
+    key: 'tot_price',
     align: 'center',
-    width: '14.28%'
-  }, {
-    title: '买家',
-    dataIndex:'buyer',
-    key: 'buyer',
-    align: 'center',
-    width: '14.28%'
-  }, {
+    width: '10%'
+  }, 
+  {
     title: '交易状态',
-    dataIndex: 'status',
+    dataIndex: 'order_status',
     render: (text, record) => (
       <div>{checkService.checkOrderStatus(text)}</div>
     ),
     key: 'status',
     align: 'center',
-    width: '14.28%'
-  }, {
+    width: '10%'
+  },  {
     title: '操作',
     render: (record) => (
       <Row type="flex" gutter={16} justify="center">
         <Col><a className='action-btn linkline' onClick={() => this.view(record.id)}>查看</a></Col>
-        <Col><a className='action-btn linkline' onClick={() => this.finishorder()}>订单已完成</a></Col>
+        <Col><a className='action-btn linkline' onClick={() => this.finishorder(record.id)}>订单已完成</a></Col>
       </Row>
     ),
     key: 'operation',
     align: 'center',
-    width: '14.28%'
-  }
+    width: '30%'
+    }
   ]
 
   render() {
@@ -152,10 +155,15 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     )
   }
   
-  finishorder(){
+  finishorder(id:number){
+    let that = this
     confirm({
       title:'订单是否已完成？',
-      onOk(){},
+      onOk(){
+        that.setOrderfinished(id).then(()=>{
+          that.getMakingOrder()
+        })
+      },
       onCancel(){}
     })
   }
@@ -164,14 +172,14 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
    */
   filter(value: string) {
     // console.log('filter', value)
-    this.searchPayOrder(value)
+    // this.searchPayOrder(value)
   }
 
   /**
    * 重置搜索表单
    */
   reset() {
-    this.getPayOrder().then(() => {
+    this.getMakingOrder().then(() => {
       this.setState({
         isSearch: false,
         searchContent: ''
@@ -182,70 +190,91 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
    * 获取订单数据
    */
 
-  async getPayOrder() {
+  async getMakingOrder() {
     // console.log(localStorage.getItem('token'))
     let closeLoading = message.loading('数据加载中', 0)
     leave = closeLoading
     try {
-      let result = await OrderService.AdminSearchOrder({
-        // token: token,
-        type: 'NoPay'
+      let result = await OrderService.RestauGetAllOrder({
+        restau_id:parseInt(localStorage.getItem('restauId')),
+        type: 1
       })
       closeLoading()
       // console.log(token)
-      if (result.stat === 'ok') {
+      // if (result.stat === 'ok') {
         // console.log(result.items)
         message.success('数据加载成功')
-        // this.setState({
-        //   orderList: result.items,
-        //   total: result.total
-        // })
-      } else {
-        throw result.stat
-      }
+        this.setState({
+          orderList: result.order,
+        })
+      // } else {
+      //   throw result.stat
+      // }
     } catch (error) {
       // console.log(error)
       message.error(error)
+    }
+  }
+
+  /**
+   * 餐厅完成订单
+   */
+  async setOrderfinished(id:number){
+    try{
+      let result = await OrderService.RestauSetOrderFinished({
+        id:id
+      })
+      if(result.stat === '1'){
+        message.success('订单已完成')
+      } else if(result.stat === '0'){
+        message.error('设置失败')
+      }
+    } catch(error){
+        Modal.confirm({
+          title:'提示',
+          content:error
+        })
     }
   }
   /**
    * 搜索订单列表
    */
-  async searchPayOrder(value: string) {
-    // console.log('searchPayOrder', value)
-    try {
-      let result = await OrderService.AdminSearchOrder({
-        // token: token,
-        type: 'NoPay',
-        keyword: value
-      })
-      if (result.stat === 'ok') {
-        // message.success('数据加载成功')
-        // console.log('search', result.items)
-        this.setState({
-          // orderList: result.items,
-          // total: result.total,
-          isSearch: true
-        })
-      } else {
-        throw result.stat
-      }
-    } catch (error) {
-      // console.log(error)
-      message.error(error)
-    }
-  }
+  // async searchPayOrder(value: string) {
+  //   // console.log('searchPayOrder', value)
+  //   try {
+  //     let result = await OrderService.AdminSearchOrder({
+  //       // token: token,
+  //       type: 'NoPay',
+  //       keyword: value
+  //     })
+  //     if (result.stat === 'ok') {
+  //       // message.success('数据加载成功')
+  //       // console.log('search', result.items)
+  //       this.setState({
+  //         // orderList: result.items,
+  //         // total: result.total,
+  //         isSearch: true
+  //       })
+  //     } else {
+  //       throw result.stat
+  //     }
+  //   } catch (error) {
+  //     // console.log(error)
+  //     message.error(error)
+  //   }
+  // }
   /**
    * 获取初始数据
    */
   componentWillMount() {
-    let orderlistall = orders.map((item,i)=>{
-      return item
-    })
-    // console.log(orderlistall)
-    this.setState({
-      orderList:orderlistall
-    })
+    // let orderlistall = orders.map((item,i)=>{
+    //   return item
+    // })
+    // // console.log(orderlistall)
+    // this.setState({
+    //   orderList:orderlistall
+    // })
+    this.getMakingOrder()
     // this.getPayOrder()
   }
 

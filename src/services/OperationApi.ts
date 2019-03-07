@@ -3,29 +3,22 @@ import * as httpService from './Http'
 import {
     BaseResponse,
     AdminAddHomeImageResponse,
-    AdminAddSkuTypeResponse,
-    AdminGetAllHomeImagesResponse,
-    AdminGetFreightAndAfterSalesAddressConfigResponse,
-    AdminListSkuTypeResponse,
+    GetHomeSwipersResponse
 } from '../interfaces/Response'
 
 import {
     // BaseRequest,
-    AdminAddHomeImageRequest,
-    // AdminAddSkuTypeRequest,
-    // AdminDeleteHomeImageRequest,
-    // AdminDeletedSkuTypeRequest,
-    // AdminSetGlobalAfterSalesAddressRequest,
-    // AdminSetGlobalFreightRequest,
+    // AdminAddHomeImageRequest,
+    AdminAddHomeImgsRequest,
     AdminSetHomeImageRequest
 }  from '../interfaces/Request'
 
-export function AdminAddHomeImage(opt:AdminAddHomeImageRequest) {
-  return httpService.post<AdminAddHomeImageResponse,AdminAddHomeImageRequest>(
-      '/api/config/AdminAddHomeImage',
-      opt
-    )
-}
+// export function AdminAddHomeImage(opt:AdminAddHomeImageRequest) {
+//   return httpService.post<AdminAddHomeImageResponse,AdminAddHomeImageRequest>(
+//       '/api/config/AdminAddHomeImage',
+//       opt
+//     )
+// }
 
 // export function AdminAddSkuType(opt:AdminAddSkuTypeRequest){
 //   return httpService.post<AdminAddSkuTypeResponse,AdminAddSkuTypeRequest>(
@@ -80,9 +73,16 @@ export function AdminAddHomeImage(opt:AdminAddHomeImageRequest) {
 //   )
 // }
 
-export function AdminSetHomeImage(opt:AdminSetHomeImageRequest){
-  return httpService.post<BaseResponse,AdminSetHomeImageRequest>(
-    '/api/config/AdminSetHomeImage',
+export function AdminAddHomeImgs(opt:AdminAddHomeImgsRequest){
+  return httpService.post<BaseResponse,AdminAddHomeImgsRequest>(
+    '/api/AdminAddHomeImgs',
     opt
+  )
+}
+
+export function GetHomeSwipers(){
+  return httpService.post<GetHomeSwipersResponse>(
+    '/api/GetHomeSwipers',
+   
   )
 }
