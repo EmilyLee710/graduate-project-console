@@ -231,7 +231,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         const result = await CuisineService.RestaurGetMyCui({
           restaurantID:restaurantid
         })
-        console.log('getall',result)
+        // console.log('getall',result)
         // if(!result.cuisine){
         //   throw '暂无菜品'
         // }

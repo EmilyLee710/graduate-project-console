@@ -90,7 +90,7 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
                             {/*使用上传组件，传入*/}  {/*存疑*/}
                             <UploadImage
                                 propsImgs={this.state.defaultCoverImgs}
-                                maxImage={3}
+                                maxImage={1}
                                 updateStateProp={this.uploadChange_addCovors.bind(this)}
                                 action={"/upload/form"}
                             />
@@ -229,6 +229,7 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
     }
 
     save(){
+        console.log('default',this.state.defaultCoverImgs)
         if(this.state.defaultCoverImgs.length > 0){
             if(this.state.license === ''||this.state.passwd===''
             ||this.state.restauAddress === ''||this.state.restauName===''
@@ -246,9 +247,13 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
     }
 
     async setRestauinfo() {
-        const cover = `/imgs/${this.state.defaultCoverImgs[0].response}`
-        console.log('cover',cover)
         try {
+            // if(this.state.defaultCoverImgs[0].url){
+                const cover = `/imgs/${this.state.defaultCoverImgs[0].response}`
+            // }else{
+            //       
+                console.log('cover',cover)
+
             let result = await RestauSettingService.RestauSetInfo({
                 restaurantID: this.state.restaurantId,
                 restaurantname: this.state.restauName,
@@ -270,6 +275,8 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
                 content: error
             })
         }
+        
+        
     }
 
     async getRestauInfo(id:number){
@@ -301,6 +308,7 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
             description: result.restaurant.description,
             sale_info: result.restaurant.sale_info
            })
+           console.log('cover',this.state.defaultCoverImgs)
        } catch(error){
            Modal.confirm({
                title:'提示',
@@ -320,7 +328,7 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
     componentDidMount() {
         store.dispatch({
             type: 'SET_MENU',
-            menu: 'operation'
+            menu: 'restausetting'
         })
         store.dispatch({
             type: 'SET_TITLE',

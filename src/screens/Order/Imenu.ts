@@ -1,6 +1,6 @@
 // import AfterSellComponent from './AfterSell'
 import FinishedComponent from './Finished'
-// import WaitingPayComponent from './WaitgPay'
+import RefuseComponent from './Refuse'
 import MakingComponent from './Making'
 import WaitingReceiveComponent from './WaitingReceive'
 
@@ -23,6 +23,10 @@ const routes :IRouter[] = [
         name:'已完成',
         tag:'finished',
         component:FinishedComponent
+    },{
+        name:'已拒绝',
+        tag:'refuse',
+        component:RefuseComponent
     }
 ]
 

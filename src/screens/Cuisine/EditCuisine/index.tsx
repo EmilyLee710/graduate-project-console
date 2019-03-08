@@ -30,6 +30,8 @@ interface State {
   tag: string
   price: string
   origin_price: string
+  coverchange: boolean
+  detailchange: boolean
 }
 
 
@@ -54,7 +56,9 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     defaultCoverImgs: [],
     defaultDetailImgs: [],
     disabled: false,
-    warningAlert: false
+    warningAlert: false,
+    coverchange: false,
+    detailchange: false
   }
 
 
@@ -194,7 +198,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     // this.state.commodity.details = value[0].
     // console.log('detail',value)
     this.setState({
-      defaultDetailImgs: value
+      defaultDetailImgs: value,
+      detailchange:true
     })
   }
 
@@ -204,7 +209,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   uploadChange_addCovors(value: any[]) {
     // console.log('Covors===>', value[0].response)
     this.setState({
-      defaultCoverImgs: value
+      defaultCoverImgs: value,
+      coverchange:true
     })
     // console.log('covers:', value)
     // this.state.commodity.images = value
@@ -269,20 +275,28 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
 
     // console.log(`save`)
     // console.log(this.state.defaultDetailImgs,this.state.defaultCoverImgs)
-    console.log('tag',this.state.cuisine.tag)
-    if (this.state.defaultDetailImgs.length >0 && this.state.defaultCoverImgs.length>0) {
-      var images: string[] = [];
-      this.state.defaultDetailImgs.forEach((item, i) => {
-        // console.log(`defaultCoverImgs${i}`,item)
-        // if (item.status == 'done')
-        images.push(item.response)
+    // console.log('tag',this.state.cuisine.tag)
+    // console.log('defaultCoverImgs', this.state.defaultCoverImgs)
+    if (this.state.defaultDetailImgs.length > 0 && this.state.defaultCoverImgs.length > 0) {
+      if (this.state.detailchange) {
+        var images: string[] = [];
+        this.state.defaultDetailImgs.forEach((item, i) => {
+          images.push(item.response)
+        })
+        this.state.cuisine.detail_url = `/imgs/${images[0]}`;
+      }
+      if (this.state.coverchange) {
+        // console.log('deimg',images[0])
+        let img = this.state.defaultCoverImgs[0];
+        // if (img.status == 'done')
+        this.state.cuisine.cover_url = `/imgs/${img.response}`;
+        console.log('coimg',img.response)
+      }
+
+
+      this.setState({
+        cuisine: this.state.cuisine
       })
-      this.state.cuisine.detail_url = images[0];
-      // console.log('deimg',images[0])
-      let img = this.state.defaultCoverImgs[0];
-      // if (img.status == 'done')
-      this.state.cuisine.cover_url = img.response;
-      // console.log('coimg',img.response)
       if (!this.verifyDataForm()) {
         return;
       }
@@ -351,22 +365,23 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     try {
       let price = parseFloat(this.state.price) * 100
       let origin_price = parseFloat(this.state.origin_price) * 100
+
       if (this.state.cuisine.cover_url === '' || this.state.cuisine.detail_url === '') {
         message.error('请上传图片')
         return
       } else {
         console.log('cover', this.state.cuisine.cover_url)
         console.log('detail', this.state.cuisine.detail_url)
-        let cover = `/imgs/${this.state.defaultCoverImgs[0].response}`
-        let detail = `/imgs/${this.state.defaultDetailImgs[0].response}`
+        // let cover = `/imgs/${this.state.cuisine.cover_url}`
+        // let detail = `/imgs/${this.state.cuisine.detail_url}`
         const result = await CuisineService.RestauSetCuiInfo({
           // token: token,
           CuisineId: this.state.cuisine.id,
           c_name: preCuisine.c_name,
-          cover_url: cover,
+          cover_url: this.state.cuisine.cover_url,
           price: price,
           origin_price: origin_price,
-          detail_url: detail,
+          detail_url: this.state.cuisine.detail_url,
           tag: preCuisine.tag
         })
         if (result.stat === '1') {
@@ -390,8 +405,8 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
       const restaurantid = parseInt(localStorage.getItem('restauId'))
       let price = parseFloat(this.state.price) * 100
       let origin_price = parseFloat(this.state.origin_price) * 100
-      console.log('cover', this.state.cuisine.cover_url)
-      console.log('detail', this.state.cuisine.detail_url)
+      // console.log('cover', this.state.cuisine.cover_url)
+      // console.log('detail', this.state.cuisine.detail_url)
       if (this.state.cuisine.cover_url === '' || this.state.cuisine.detail_url === '') {
         message.error('请上传图片')
         return
@@ -408,9 +423,9 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
           origin_price: origin_price,
           tag: this.state.cuisine.tag
         })
-        console.log('addstat',result.stat)
+        // console.log('addstat',result.stat)
         if (result.stat === '1') {
-          console.log(result.CuisineId)
+          // console.log(result.CuisineId)
           message.success('添加成功')
           // this.props.history.goBack()
         } else {
@@ -463,6 +478,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
       }]
       let price = (result.cuisine.price / 100).toString()
       let origin_price = (result.cuisine.origin_price / 100).toString()
+
       this.setState({
         defaultCoverImgs: coverImgs,
         defaultDetailImgs: detailImgs,
@@ -509,14 +525,17 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     const status = this.props.match.params.status
     const id = this.props.match.params.id
     // console.log(id)
-    // this.setState({
-    //   status: status
-    // })
+    this.setState({
+      status: status
+    })
 
     if (status !== 'add') {
       //请求商品数据
       // this.getCommodity(id)
-      this.getCuisine(id)
+      this.getCuisine(id).then(() => {
+        console.log('cover', this.state.cuisine.cover_url)
+        console.log('detail', this.state.cuisine.detail_url)
+      })
       // cuisineList.map((item, i) => {
       //   console.log(item)
       //   if (item.id === id) {

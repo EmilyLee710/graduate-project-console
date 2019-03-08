@@ -14617,9 +14617,6 @@ textarea.ant-input-number {
 .express {
   margin-left: -10px;
 }
-.btn-left {
-  margin-left: 10px;
-}
 .header {
   width: 100%;
   height: 30px;
@@ -14629,6 +14626,9 @@ textarea.ant-input-number {
 .content {
   margin-top: 10px;
   padding-bottom: 10px;
+}
+.btn-left {
+  margin-left: 10px;
 }
 .express {
   padding-left: 10px;
@@ -14699,4 +14699,4 @@ textarea.ant-input-number {
   flex-flow: row wrap;
 }
 
-/*# sourceMappingURL=index.css.map?v=70daf1*/
+/*# sourceMappingURL=index.css.map?v=e63917*/

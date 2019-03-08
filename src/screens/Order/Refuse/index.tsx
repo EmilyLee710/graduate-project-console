@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as model from '../../../interfaces/Model'
 
-import { Layout, Button, Table, Input, message, Row, Col, Modal } from 'antd';
+import { Layout, Button, Table, Input, message, Row,Col, Modal } from 'antd';
 import { ColumnProps } from 'antd/lib/table'
 
 import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
@@ -9,14 +9,13 @@ import { RouteComponentProps, Route, Redirect, Switch } from 'react-router'
 import store from '../../../Store'
 import mount from 'mount-react'
 
+import './style.less'
 import orders from '../OrderList'
-
-import ReceiveOrderView from '../../../components/ReceiveOrderIfoView'
+import ViewModal from '../../../components/MakingOrderInfoView'
 import checkService from '../../../services/Checked'
 import * as OrderService from '../../../services/OrderApi'
 
 interface State {
-  selectedRowKeys: number[]
   orderList: model.OrderListItem[]
   isSearch: boolean
   searchContent: string
@@ -27,12 +26,11 @@ interface State {
 
 const { Header, Footer, Sider, Content } = Layout
 const Search = Input.Search;
-const confirm = Modal.confirm;
+const confirm = Modal.confirm
 const token = localStorage.getItem('token')
 var leave: Function
 export default class extends React.Component<RouteComponentProps<any>, State> {
   state: State = {
-    selectedRowKeys: [],
     orderList: [],
     isSearch: false,
     searchContent: '',
@@ -40,6 +38,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     pageIndex: 1,
     total: 0
   }
+
   colums: ColumnProps<model.OrderListItem>[] = [{
     title: '菜品清单',
     render: (record) => (
@@ -76,17 +75,10 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     render: (text, record) => (
       <p>{text/100}</p>
     ),
-    key: 'pay_price',
+    key: 'tot_price',
     align: 'center',
     width: '10%'
   }, 
-  // {
-  //   title: '买家',
-  //   dataIndex:'buyer',
-  //   key: 'buyer',
-  //   align: 'center',
-  //   width: '14.28%'
-  // }, 
   {
     title: '交易状态',
     dataIndex: 'order_status',
@@ -96,28 +88,29 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
     key: 'status',
     align: 'center',
     width: '10%'
-  }, {
+  },  {
     title: '操作',
     render: (record) => (
       <Row type="flex" gutter={16} justify="center">
         <Col><a className='action-btn linkline' onClick={() => this.view(record.id)}>查看</a></Col>
-        <Col><a className='action-btn linkline' onClick={() => this.receiveOrder(record.id)}>接单</a></Col>
-        <Col><a className='action-btn linkline' onClick={() => this.refuseOrder(record.id)}>拒绝接单</a></Col>
+        <Col><a className='action-btn linkline' onClick={() => this.del()}>删除</a></Col>
       </Row>
     ),
     key: 'operation',
     align: 'center',
     width: '30%'
-  }]
+    }
+  ]
+
   render() {
     // let selectedRowKeys = this.state.selectedRowKeys
     // const rowSelection = {
     //   selectedRowKeys,
     //   onChange: this.onSelectChange,
     // };
-
+    const { searchContent } = this.state
     return (<div>
-      {/* <p>待收货</p> */}
+      {/* <p>待付款</p> */}
       <Layout>
         <Header>
           <Search
@@ -127,9 +120,10 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
             onChange={(event) => this.setState({ searchContent: event.target.value.trim() })}
             onSearch={this.filter.bind(this)}
             enterButton
+            // value={searchContent}
             style={{ width: '20%', marginLeft: '-35px' }}
           />
-          {this.state.isSearch ? <Button style={{ marginLeft: '10px' }} onClick={this.reset.bind(this)} >显示全部</Button> : ''}
+          {this.state.isSearch ? <Button className="btn-left" onClick={this.reset.bind(this)} >显示全部</Button> : ''}
         </Header>
         <Content>
           <Table bordered className='order-list'
@@ -142,7 +136,6 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
             }} />
         </Content>
       </Layout>
-      {/* <Table rowSelection={rowSelection} bordered className='order-list' rowKey='id' dataSource={this.state.orderList} columns={this.colums} /> */}
     </div>)
   }
 
@@ -153,76 +146,62 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   //   console.log('selectedRowKeys changed: ', selectedRowKeys);
   //   this.setState({ selectedRowKeys:selectedRowKeys});
   // }
-
+  /**
+   * 显示弹窗
+   */
+  view(record: number) {
+    let unmount = mount(
+      <ViewModal id={record} />
+    )
+  }
+  
+  del() {
+    confirm({
+      title: '是否删除订单？',
+      onOk() { },
+      onCancel() { }
+    })
+  }
   /**
    * 搜索列表
    */
   filter(value: string) {
-    // this.searchShippedOrder(value)
+    // console.log('filter', value)
+    // this.searchPayOrder(value)
   }
 
   /**
    * 重置搜索表单
    */
   reset() {
-    // this.getShippedOrder().then(() => {
-    //   this.setState({
-    //     isSearch: false,
-    //     searchContent:''
-    //   })
-    // })
+    this.getMakingOrder().then(() => {
+      this.setState({
+        isSearch: false,
+        searchContent: ''
+      })
+    })
   }
-
   /**
-   * 显示弹窗
+   * 获取订单数据
    */
-  view(record: number) {
-    let unmount = mount(
-      <ReceiveOrderView id={record} />
-    )
-  }
 
-  receiveOrder(id:number) {
-    let that = this
-    confirm({
-      title: '确定接单吗？',
-      onOk(){ 
-        that.receiveMyOrder(id).then(()=>{
-          that.getWaitReceiveOrder()
-        })
-      },
-      onCancel() { }
-    })
-  }
-
-  refuseOrder(id:number) {
-    let that = this
-    confirm({
-      title: '确定拒绝接单吗？',
-      onOk() { 
-        that.refuseMyOrder(id).then(()=>{
-          that.getWaitReceiveOrder()
-        })
-      },
-      onCancel() { }
-    })
-  }
-
-  async getWaitReceiveOrder() {
+  async getMakingOrder() {
+    // console.log(localStorage.getItem('token'))
     let closeLoading = message.loading('数据加载中', 0)
     leave = closeLoading
     try {
       let result = await OrderService.RestauGetAllOrder({
-        restau_id: parseInt(localStorage.getItem('restauId')),
-        type: 0
+        restau_id:parseInt(localStorage.getItem('restauId')),
+        type: 3
       })
       closeLoading()
+      // console.log(token)
       // if (result.stat === 'ok') {
-      message.success('数据加载成功')
-      // console.log(result.items)
-      this.setState({
-        orderList: result.order,
-      })
+        // console.log(result.items)
+        message.success('数据加载成功')
+        this.setState({
+          orderList: result.order,
+        })
       // } else {
       //   throw result.stat
       // }
@@ -233,17 +212,17 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   }
 
   /**
-   * 餐厅接单
+   * 餐厅完成订单
    */
-  async receiveMyOrder(id:number){
+  async setOrderfinished(id:number){
     try{
-      let result = await OrderService.RestauReceiveOrder({
+      let result = await OrderService.RestauSetOrderFinished({
         id:id
       })
       if(result.stat === '1'){
-        message.success('接单成功')
+        message.success('订单已完成')
       } else if(result.stat === '0'){
-        message.error('接单失败')
+        message.error('设置失败')
       }
     } catch(error){
         Modal.confirm({
@@ -252,36 +231,15 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         })
     }
   }
-
-  /**
-   * 餐厅拒绝接单
-   */
-  async refuseMyOrder(id:number){
-    try{
-      let result = await OrderService.RestauRefuseOrder({
-        id:id
-      })
-      if(result.stat === '1'){
-        message.success('拒绝接单成功')
-      } else if(result.stat === '0'){
-        message.error('拒绝接单失败')
-      }
-    } catch(error){
-        Modal.confirm({
-          title:'提示',
-          content:error
-        })
-    }
-  }
-
   /**
    * 搜索订单列表
    */
-  // async searchShippedOrder(value: string) {
+  // async searchPayOrder(value: string) {
+  //   // console.log('searchPayOrder', value)
   //   try {
   //     let result = await OrderService.AdminSearchOrder({
   //       // token: token,
-  //       type: 'Shipped',
+  //       type: 'NoPay',
   //       keyword: value
   //     })
   //     if (result.stat === 'ok') {
@@ -300,26 +258,25 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   //     message.error(error)
   //   }
   // }
-
   /**
    * 获取初始数据
    */
   componentWillMount() {
-    this.getWaitReceiveOrder()
-    // this.getShippedOrder()
     // let orderlistall = orders.map((item,i)=>{
     //   return item
     // })
-    // console.log(orderlistall)
+    // // console.log(orderlistall)
     // this.setState({
     //   orderList:orderlistall
     // })
+    this.getMakingOrder()
+    // this.getPayOrder()
   }
 
   componentDidMount() {
     store.dispatch({
       type: 'SET_TAG',
-      tag: 'waitingreceive',
+      tag: 'refuse',
     })
   }
 }

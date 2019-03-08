@@ -53,8 +53,8 @@ export default class extends React.Component<Props, State>{
 
                 <div className='content'>
                     <p>菜品名称：{this.state.cuisineInfo.c_name}</p>
-                    <p>现价：{this.state.cuisineInfo.price}</p>
-                    <p>原价：{this.state.cuisineInfo.origin_price}</p>
+                    <p>现价：{this.state.cuisineInfo.price/100}</p>
+                    <p>原价：{this.state.cuisineInfo.origin_price/100}</p>
                     <p>创建时间：{checkService.timestampToDate(this.state.cuisineInfo.ctime)}</p>
                     <p>标签：{this.state.cuisineInfo.tag}</p>
                     <p>收藏数量：{this.state.cuisineInfo.collect_num}</p>
@@ -84,18 +84,18 @@ export default class extends React.Component<Props, State>{
                 // token: token,
                 CuisineId: id
             })
-            console.log('result',result)
-            // if (result.stat === 'ok') {
-            //     // console.log(result.item)
-            //     // this.setState({
-            //     //     orderInfo: result.item
-            //     // })
-            // } else {
-            //     throw result.stat
-            // }
-            // this.setState({
-            //     cuisineInfo:result.cuisine
-            // })
+            // console.log('result',result)
+            if (result.stat === '1') {
+                // console.log(result.item)
+                this.setState({
+                    cuisineInfo: result.cuisine
+                })
+            } else {
+                throw result.stat
+            }
+            this.setState({
+                cuisineInfo:result.cuisine
+            })
 
         } catch (error) {
             message.error(error)

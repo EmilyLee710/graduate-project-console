@@ -152,7 +152,7 @@ export interface RestauAddCuisineResponse extends BaseResponse{
 /**
  * 餐厅查看菜品
  */
-export interface RestauGetCuiInfoResponse{
+export interface RestauGetCuiInfoResponse extends BaseResponse{
     cuisine:model.CuisineDetailInfo
   }
 

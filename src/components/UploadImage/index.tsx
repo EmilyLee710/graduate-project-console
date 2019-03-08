@@ -59,7 +59,7 @@ export default class extends React.Component<Props,State>{
           showImgs: uploader.fileList
         })
         // console.log('uploader',uploader)
-        // console.log('uploaderfileList',uploader.fileList)
+        console.log('uploaderfileList',uploader.fileList)
         if(uploader.fileList){
           let images: string[] = []
           uploader.fileList.map((item: any) => {
@@ -107,16 +107,19 @@ export default class extends React.Component<Props,State>{
         )
     }
 
-    // componentWillReceiveProps(prevPropos:Props){
-    //   console.log("prevPropos.propsImgs",prevPropos.propsImgs)
-    //   let tmp;
-    //   if(this.props.propsImgs[0].url==='')tmp=[]
-    //   else tmp=this.props.propsImgs
-    //   this.setState({
-    //     showImgs:prevPropos.propsImgs
-    //   })
-    //   console.log("showImgs:",this.state.showImgs)
-    // }
+    componentWillReceiveProps(prevPropos:Props){
+      // console.log("prevPropos.propsImgs",prevPropos.propsImgs)
+      // let tmp;
+      // if(this.props.propsImgs[0].url==='')tmp=[]
+      // else tmp=this.props.propsImgs
+      // this.setState({
+      //   showImgs:prevPropos.propsImgs
+      // })
+      // console.log("showImgs:",this.state.showImgs)
+      // this.setState({
+      //   showImgs: prevPropos.propsImgs
+      // })
+    }
 
     componentWillMount(){
       // console.log("===================", this.props.propsImgs)

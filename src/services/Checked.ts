@@ -9,7 +9,9 @@ export default new class {
       return '制作中'
     } else if(type === 2){
       return '已完成'
-    } 
+    } else if(type === 3){
+      return '已拒绝'
+    }
   }
 
   /**

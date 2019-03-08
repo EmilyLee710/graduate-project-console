@@ -67,7 +67,7 @@ export default class extends React.Component<Props, State>{
                         {this.state.cuisinelist.length === 0?null:this.state.restauInfo.cuisinelist.map((item, i) => {
                             return <Row key={i} type="flex" gutter={16} justify="space-around" style={{ textAlign: 'center' }}>
                                 <Col span={8}>{item.c_name}</Col>
-                                <Col span={8}>{item.price}</Col>
+                                <Col span={8}>{item.price/100}</Col>
                                 <Col span={8}>{checkService.timestampToDate(item.ctime)}</Col>
                             </Row>
                         })}
