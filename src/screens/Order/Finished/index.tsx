@@ -118,7 +118,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
         <Header>
           <Row style={{ marginLeft: '-35px' }}>
             <Col span={5}>
-              <Search
+              {/* <Search
                 className='search'
                 placeholder="请输入编号"
                 value={this.state.searchContent}
@@ -126,7 +126,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
                 onSearch={this.filter.bind(this)}
                 enterButton
                 style={{ width: '100%', marginLeft: '' }}
-              />
+              /> */}
             </Col>
             <Col span={3}>
               {this.state.isSearch ? <Button style={{ marginLeft: '10px' }} onClick={this.reset.bind(this)} >显示全部</Button> : ''}

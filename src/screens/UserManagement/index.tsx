@@ -61,13 +61,13 @@ export default class UserManagement extends React.Component<RouteComponentProps<
                             onClick={() => this.props.history.push(`${this.props.match.url}/addadmin`)}>添加管理员</Button>
                     </div> */}
                     <div>
-                        <Search
+                        {/* <Search
                             placeholder="请搜索用户名称"
 
                             // onChange={(event) => this.setState({ searchContent: event.target.value.trim() })}
                             // onSearch={this.filter.bind(this)}
                             enterButton
-                        />
+                        /> */}
                     </div>
                 </Header>
                 <Content>

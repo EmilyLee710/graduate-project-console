@@ -225,7 +225,7 @@ export default class extends React.Component<RouteComponentProps<any>, State> {
   async getAllCuisine() {
     const restaurantid = parseInt(localStorage.getItem('restauId'))
     if (!restaurantid) {
-      message.error('请重新登录')
+      // message.error('请重新登录')
     } else {
       try {
         const result = await CuisineService.RestaurGetMyCui({

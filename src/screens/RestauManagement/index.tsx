@@ -63,13 +63,13 @@ export default class extends React.Component<RouteComponentProps<any>, State>{
                             onClick={() => this.props.history.push(`${this.props.match.url}/addrestaurant`)}>添加餐厅</Button>
                     </div>
                     <div>
-                        <Search
+                        {/* <Search
                             placeholder="请搜索餐厅名称"
 
                             // onChange={(event) => this.setState({ searchContent: event.target.value.trim() })}
                             // onSearch={this.filter.bind(this)}
                             enterButton
-                        />
+                        /> */}
                     </div>
                 </Header>
                 <Content>
